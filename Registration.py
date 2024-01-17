@@ -45,9 +45,10 @@ if __name__ == '__main__':
 
     zeroconf = Zeroconf(ip_version=ip_version)
     print("Registration of a service, press Ctrl-C to exit...")
-    zeroconf.register_service(info)
+    
     try:
         while True:
+            zeroconf.register_service(info)
             sleep(1)
     except KeyboardInterrupt:
         pass
