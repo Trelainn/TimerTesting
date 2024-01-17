@@ -32,24 +32,19 @@ if __name__ == '__main__':
     else:
         ip_version = IPVersion.V4Only
 
-    desc = {'path': '/~paulsm/'}
 
     info = ServiceInfo(
-        "_http._tcp.local.",
-        "Seamaze_"+hostname+"._http._tcp.local.",
+        "Seamaze_"+hostname+"._tcp.local.",
         addresses=[socket.inet_aton(IPAddress)],
         port=80,
-        properties=desc,
-        server="ash-2.local.",
     )
-
-    zeroconf = Zeroconf(ip_version=ip_version)
-    print("Registration of a service, press Ctrl-C to exit...")
     
     try:
         while True:
+            zeroconf = Zeroconf(ip_version=ip_version)
+            print("Registration of a service, press Ctrl-C to exit...")
             zeroconf.register_service(info)
-            sleep(1)
+            sleep(10)
     except KeyboardInterrupt:
         pass
     finally:
