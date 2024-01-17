@@ -57,7 +57,7 @@ if __name__ == '__main__':
         infos.append(
             AsyncServiceInfo(
                 "_http._tcp.local.",
-                f"Paul's Test Web Site {i}._http._tcp.local.",
+                f"Seamaze_Timer{str(i)}._http._tcp.local.",
                 addresses=[socket.inet_aton("127.0.0.1")],
                 port=80,
                 properties={'path': '/~paulsm/'},
