@@ -34,6 +34,11 @@ class AsyncRunner:
 
 
 if __name__ == '__main__':
+
+    hostname=socket.gethostname()
+    IPAddr=socket.gethostbyname(hostname)
+    print("Your Computer Name is:"+hostname)
+    print("Your Computer IP Address is:"+IPAddr)
     logging.basicConfig(level=logging.DEBUG)
 
     parser = argparse.ArgumentParser()
