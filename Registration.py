@@ -26,7 +26,7 @@ if __name__ == '__main__':
             zeroconf = Zeroconf(ip_version=IPVersion.All)
             print("Registration of a service, press Ctrl-C to exit...")
             zeroconf.register_service(info)     
-            sleep(1)
+            sleep(15)
     except KeyboardInterrupt:
         pass
     finally:
