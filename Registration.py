@@ -32,16 +32,12 @@ if __name__ == '__main__':
     else:
         ip_version = IPVersion.V4Only
 
-    desc = {'path': '/~Seamaze/'}
-
     info = ServiceInfo(
         "_seamaze-timer._tcp.local.",
         "SeamazeTimer"+hostname+"._seamaze-timer._tcp.local.",
         addresses=[socket.inet_aton(IPAddress)],
         port=80,
         server=hostname+".local."
-        #properties=desc,
-        #server="ash-2.local.",
     )
     '''
     info = ServiceInfo(
