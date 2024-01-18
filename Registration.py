@@ -31,7 +31,7 @@ if __name__ == '__main__':
     else:
         ip_version = IPVersion.V4Only
     '''
-    
+
     info = ServiceInfo(
         "_seamaze-timer._tcp.local.",
         "SeamazeTimer"+hostname+"._seamaze-timer._tcp.local.",
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     )
     '''
 
-    zeroconf = Zeroconf(ip_version=ip_version)
+    zeroconf = Zeroconf(ip_version=IPVersion.All)
     print("Registration of a service, press Ctrl-C to exit...")
     zeroconf.register_service(info)
     
