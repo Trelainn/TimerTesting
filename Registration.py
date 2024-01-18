@@ -39,7 +39,7 @@ if __name__ == '__main__':
         "Paul's Test Web Site._http._tcp.local.",
         addresses=[socket.inet_aton("127.0.0.1")],
         port=80,
-        properties="bla",
+        properties=desc,
         server="ash-2.local.",
     )
     '''
