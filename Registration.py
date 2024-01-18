@@ -32,14 +32,22 @@ if __name__ == '__main__':
     else:
         ip_version = IPVersion.V4Only
 
-
+    info = ServiceInfo(
+        "_http._tcp.local.",
+        "Paul's Test Web Site._http._tcp.local.",
+        addresses=[socket.inet_aton("127.0.0.1")],
+        port=80,
+        properties=desc,
+        server="ash-2.local.",
+    )
+    '''
     info = ServiceInfo(
         "Seamaze_"+hostname+"._tcp.local.",
         "_seamaze_timer._tcp.local.",
         addresses=[socket.inet_aton(IPAddress)],
         port=80,
     )
-    
+    '''
     try:
         while True:
             zeroconf = Zeroconf(ip_version=ip_version)
