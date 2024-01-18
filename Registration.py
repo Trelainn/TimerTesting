@@ -32,6 +32,8 @@ if __name__ == '__main__':
     else:
         ip_version = IPVersion.V4Only
 
+    desc = {'path': '/~Seamaze/'}
+
     info = ServiceInfo(
         "_http._tcp.local.",
         "Paul's Test Web Site._http._tcp.local.",
