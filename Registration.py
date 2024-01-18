@@ -14,8 +14,7 @@ if __name__ == '__main__':
     hostname=str(socket.gethostname())
     IPAddress=socket.gethostbyname(hostname+".local")
 
-    #logging.basicConfig(level=logging.DEBUG)
-
+    '''
     parser = argparse.ArgumentParser()
     parser.add_argument('--debug', action='store_true')
     version_group = parser.add_mutually_exclusive_group()
@@ -31,7 +30,8 @@ if __name__ == '__main__':
         ip_version = IPVersion.V6Only
     else:
         ip_version = IPVersion.V4Only
-
+    '''
+    
     info = ServiceInfo(
         "_seamaze-timer._tcp.local.",
         "SeamazeTimer"+hostname+"._seamaze-timer._tcp.local.",
