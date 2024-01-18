@@ -14,7 +14,7 @@ if __name__ == '__main__':
     hostname=str(socket.gethostname())
     IPAddress=socket.gethostbyname(hostname+".local")
 
-    logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(level=logging.DEBUG)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--debug', action='store_true')
@@ -35,9 +35,9 @@ if __name__ == '__main__':
     desc = {'path': '/~Seamaze/'}
 
     info = ServiceInfo(
-        "_http._tcp.local.",
-        "Paul's Test Web Site._http._tcp.local.",
-        addresses=[socket.inet_aton("127.0.0.1")],
+        "_seamaze_timer._tcp.local.",
+        "Seamaze_"+hostname+"._tcp.local.",
+        addresses=[socket.inet_aton(IPAddress)],
         port=80,
         properties=desc,
         server="ash-2.local.",
@@ -50,12 +50,14 @@ if __name__ == '__main__':
         port=80,
     )
     '''
+
+    zeroconf = Zeroconf(ip_version=ip_version)
+    print("Registration of a service, press Ctrl-C to exit...")
+    zeroconf.register_service(info)
+    
     try:
-        while True:
-            zeroconf = Zeroconf(ip_version=ip_version)
-            print("Registration of a service, press Ctrl-C to exit...")
-            zeroconf.register_service(info)
-            sleep(10)
+        while True:        
+            sleep(1)
     except KeyboardInterrupt:
         pass
     finally:
