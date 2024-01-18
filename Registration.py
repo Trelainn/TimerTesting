@@ -31,13 +31,13 @@ if __name__ == '__main__':
     else:
         ip_version = IPVersion.V4Only
     '''
-
+    properties = {}
     info = ServiceInfo(
         "_seamaze-timer._tcp.local.",
         "SeamazeTimer"+hostname+"._seamaze-timer._tcp.local.",
         addresses=[socket.inet_aton(IPAddress)],
         port=80,
-        properties={'version': '1.0'}
+        properties={'version': '1.0'},
         server=hostname+".local."
     )
     '''
