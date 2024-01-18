@@ -23,7 +23,7 @@ if __name__ == '__main__':
                 server=hostname+".local."
             )
 
-            zeroconf = Zeroconf(ip_version=IPVersion.V4Only)
+            zeroconf = Zeroconf(ip_version=IPVersion.All)
             print("Registration of a service, press Ctrl-C to exit...")
             zeroconf.register_service(info)     
             sleep(15)
