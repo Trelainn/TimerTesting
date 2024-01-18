@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     info = ServiceInfo(
         "_seamaze-timer._tcp.local.",
-        "SeamazeTimer"+hostname+"._seamaze-timer._tcp.local.",
+        hostname+"._seamaze-timer._tcp.local.",
         addresses=[socket.inet_aton(IPAddress)],
         port=80,
         #properties=desc,
