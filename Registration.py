@@ -35,8 +35,8 @@ if __name__ == '__main__':
     desc = {'path': '/~Seamaze/'}
 
     info = ServiceInfo(
-        "_http._tcp.local.",
-        "Paul's Test Web Site._http._tcp.local.",
+        "_seamaze_timer._tcp.local.",
+        "Seamaze Timer "+hostname+" _seamaze_timer._tcp.local.",
         addresses=[socket.inet_aton(IPAddress)],
         port=80,
         properties=desc,
