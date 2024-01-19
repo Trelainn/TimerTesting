@@ -65,7 +65,7 @@ if __name__ == '__main__':
             addresses=[socket.inet_aton(IPAddr)],
             port=80,
             properties={'path': '/~paulsm/'},
-            server=f"zcdemohost-{i}.local.",
+            server=f"zcdemohost.local.",
         )
     )
 
