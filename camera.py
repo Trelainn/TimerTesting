@@ -10,7 +10,7 @@ face_detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 cv2.startWindowThread()
 
 picam2 = Picamera2()
-picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
+picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (1920, 1080)}))
 picam2.start()
 
 while True:
