@@ -25,6 +25,7 @@ while True:
             cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0))
 
         cv2.imshow("Camera", im)
-    except:
+    except Exception as e:
+        print(e)
         cv2.imshow("Camera", gray)
     cv2.waitKey(1)
