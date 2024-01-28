@@ -16,11 +16,15 @@ picam2.start()
 while True:
     im = picam2.capture_array()
 
-    grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-    faces = face_detector.detectMultiScale(grey, 1.1, 5)
+    gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 
-    for (x, y, w, h) in faces:
-        cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0))
+    try:
+        faces = face_detector.detectMultiScale(gray, 1.1, 5)
 
-    cv2.imshow("Camera", im)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0))
+
+        cv2.imshow("Camera", im)
+    except:
+        cv2.imshow("Camera", gray)
     cv2.waitKey(1)
