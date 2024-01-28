@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
-# Normally the QtGlPreview implementation is recommended as it benefits
-# from GPU hardware acceleration.
+# Capture a JPEG while still running in the preview mode.
 
 import time
 
@@ -11,7 +10,10 @@ picam2 = Picamera2()
 picam2.start_preview(Preview.QTGL)
 
 preview_config = picam2.create_preview_configuration()
+capture_config = picam2.create_still_configuration()
 picam2.configure(preview_config)
 
 picam2.start()
-time.sleep(60)
+time.sleep(2)
+
+picam2.switch_mode_and_capture_file(capture_config, "test_full.jpg")
