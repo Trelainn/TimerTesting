@@ -13,7 +13,7 @@ picam2 = Picamera2()
 preview_config = picam2.create_preview_configuration(main={"size": (1980, 1080)})
 picam2.configure(preview_config)
 
-video_config = picam2.create_video_configuration()
+video_config = picam2.create_video_configuration(main={"size": (1980, 1080)})
 picam2.configure(video_config)
 
 encoder = H264Encoder(10000000)
