@@ -1,23 +1,26 @@
 #!/usr/bin/python3
 
-# Capture a JPEG while still running in the preview mode. When you
-# capture to a file, the return value is the metadata for that image.
+import cv2
 
-import time
+from picamera2 import Picamera2
 
-from picamera2 import Picamera2, Preview
+# Grab images as numpy arrays and leave everything else to OpenCV.
+
+face_detector = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")
+cv2.startWindowThread()
 
 picam2 = Picamera2()
-
-preview_config = picam2.create_preview_configuration(main={"size": (1980, 1080)})
-picam2.configure(preview_config)
-
-picam2.start_preview(Preview.QTGL)
-
+picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
 picam2.start()
-time.sleep(2)
 
-metadata = picam2.capture_file("test.jpg")
-print(metadata)
+while True:
+    im = picam2.capture_array()
 
-picam2.close()
+    grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+    faces = face_detector.detectMultiScale(grey, 1.1, 5)
+
+    for (x, y, w, h) in faces:
+        cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0))
+
+    cv2.imshow("Camera", im)
+    cv2.waitKey(1)
