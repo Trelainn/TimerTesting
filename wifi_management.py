@@ -18,17 +18,17 @@ def list_wifi_networks():
         except Exception as e:
             print (e)
             pass
-        bssid = result[0:16]
+        bssid = result[0]
         try:
             end = result.index('Ad-Hoc')
         except Exception as e:
             print(e)
         try:
             end = result.index('Infra')
-        except:
-            pass
+        except Exception as e:
+            print(e)
         print(end)
-        ssid = result[17]
+        ssid = " ".join(result[1:end])
         scan_return.append(result)
     return scan_return
 
