@@ -8,6 +8,8 @@ def list_wifi_networks():
     scan_results.pop(0)
     for result in scan_results:
         result = result.split(' ')
+        print(result)
+        print("\n")
         try:
             while 1:
                 result.pop(' ')
