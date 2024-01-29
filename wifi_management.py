@@ -9,4 +9,4 @@ def list_wifi_networks():
 scan_results = list_wifi_networks()
 time.sleep(5)
 
-print(scan_results.split('\n'))
+print(scan_results.split(' '))
