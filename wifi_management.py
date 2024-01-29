@@ -30,17 +30,19 @@ def list_wifi_networks():
             while 1:
                 result.remove('')
         except Exception as e:
-            print (e)
+            #print (e)
             pass
         bssid = result[0]
         try:
             end = result.index('Ad-Hoc')
         except Exception as e:
-            print(e)
+            #print(e)
+            pass
         try:
             end = result.index('Infra')
         except Exception as e:
-            print(e)
+            #print(e)
+            pass
         ssid = " ".join(result[1:end])
         scan_return.append({"IN USE": current, "BSSID": bssid, "SSID": ssid})
     return scan_return
