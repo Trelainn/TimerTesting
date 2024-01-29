@@ -9,11 +9,12 @@ def list_wifi_networks():
     scan_return = []
     for result in scan_results:
         result = result.split(' ')
+        result.pop(0)
         print(result)
         print("\n")
         try:
             while 1:
-                result.pop('')
+                result.remove('')
         except Exception as e:
             print (e)
             pass
