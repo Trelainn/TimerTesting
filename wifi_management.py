@@ -1,5 +1,4 @@
 import os
-import time
 
 def turn_on():
     os.system("nmcli radio wifi on")
@@ -13,7 +12,7 @@ def connect(ssid,password=""):
 	else:
 		os.system(f"nmcli dev wifi connect {ssid} password {password}")
           
-def hostpot(ssid,password):
+def hotspot(ssid,password):
 	os.system("nmcli dev wifi hotspot ssid {ssid} password {password}")
 
 def list_wifi_networks():
@@ -46,11 +45,3 @@ def list_wifi_networks():
         ssid = " ".join(result[1:end])
         scan_return.append({"IN USE": current, "BSSID": bssid, "SSID": ssid})
     return scan_return
-
-    
-
-scan_results = list_wifi_networks()
-time.sleep(5)
-print(scan_results)
-
-connect("INFINITUM643E_5", "2h68be4gBP")
