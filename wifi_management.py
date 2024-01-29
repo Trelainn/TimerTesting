@@ -8,16 +8,20 @@ def list_wifi_networks():
     scan_results.pop(0)
     scan_return = []
     for result in scan_results:
+        current = False
         result = result.split(' ')
-        result.pop(0)
-        print(result)
-        print("\n")
+        if result.pop(0) == '*':
+            current = True
         try:
             while 1:
                 result.remove('')
         except Exception as e:
             print (e)
             pass
+        bssid = result[0:16]
+        end = result.index('Ad-Hoc')
+        print(end)
+        ssid = result[17]
         scan_return.append(result)
     return scan_return
 
