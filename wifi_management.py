@@ -8,4 +8,8 @@ def list_wifi_networks():
 
 scan_results = list_wifi_networks()
 time.sleep(5)
-print(scan_results)
+
+for scan in scan_results:
+    print(scan)
+    time.sleep(1)
+
