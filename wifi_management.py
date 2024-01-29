@@ -13,7 +13,7 @@ def list_wifi_networks():
         print("\n")
         try:
             while 1:
-                result.pop(' ')
+                result.pop('')
         except Exception as e:
             print (e)
             pass
