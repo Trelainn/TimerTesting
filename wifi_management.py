@@ -28,7 +28,7 @@ def list_wifi_networks():
         except Exception as e:
             print(e)
         print(end)
-        ssid = " ".join(result[1:end])
+        ssid = " ".join(result[1:5])
         scan_return.append(result)
     return scan_return
 
