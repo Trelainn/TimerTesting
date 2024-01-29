@@ -5,4 +5,4 @@ wifi.off()
 time.sleep(5)
 wifi.on()
 
-print(wifi.printpsk())
+print(wifi.print_psk())
