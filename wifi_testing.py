@@ -1,23 +1,13 @@
-import wifi
-import time
+# import module
+import os
 
-# scan for available WiFi networks
-wifi_scanner = wifi.Cell.all('wlan0')
-available_networks = [cell.ssid for cell in wifi_scanner]
+# scan available Wifi networks
+os.system('cmd /c "netsh wlan show networks"')
 
-# print available networks
-print(f"Available Networks: {available_networks}")
+# input Wifi name
+name_of_router = input('Enter Name/SSID of the Wifi Network you wish to connect to: ')
 
-# connect to a WiFi network
-network_ssid = input("Enter network SSID: ")
-network_pass = input("Enter network password: ")
+# connect to the given wifi network
+os.system(f'''cmd /c "netsh wlan connect name={name_of_router}"''')
 
-for cell in wifi_scanner:
-    if cell.ssid == network_ssid:
-        scheme = wifi.Scheme.for_cell('wlan0', cell.ssid, cell, network_pass)
-        scheme.save()
-        scheme.activate()
-        print(f"Connected to network: {network_ssid}")
-        break
-    else:
-        print(f"Unable to find network: {network_ssid}")
+print("If you're not yet connected, try connecting to a previously connected SSID again!")
