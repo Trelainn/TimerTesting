@@ -4,12 +4,12 @@ import time
 
 def list_wifi_networks():
     scan_results = os.popen("nmcli dev wifi list").read()
-    scan_results.splitlines()
+    scan_results = scan_results.splitlines()
     scan_results.pop(0)
     for result in scan_results:
-        result.split(' ')
+        result = result.split(' ')
         try:
-            while true:
+            while 1:
                 result.pop(' ')
         except Exception as e:
             print (e)
