@@ -27,9 +27,8 @@ def list_wifi_networks():
             end = result.index('Infra')
         except Exception as e:
             print(e)
-        print(end)
-        ssid = " ".join(result[1:5])
-        scan_return.append(result)
+        ssid = " ".join(result[1:end])
+        scan_return.append({"IN USE": current, "BSSID": bssid, "SSID": ssid})
     return scan_return
 
     
