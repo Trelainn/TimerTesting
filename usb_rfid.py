@@ -5,5 +5,5 @@ serialport = serial.Serial("/dev/ttyACM0", 9600, timeout=0.01)
 while True:
     reading = serialport.readlines()
     if reading:
-        print(reading)
+        print(reading.decode())
 
