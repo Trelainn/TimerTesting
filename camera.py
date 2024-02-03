@@ -15,7 +15,10 @@ picam2.start()
 
 while True:
     im = picam2.capture_array()
-
+    detect = cv2.QRCodeDetector()
+    value, points, straight_qrcode = detect.detectAndDecode(im)
+    print (value)
+    '''
     gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 
     try:
@@ -28,4 +31,5 @@ while True:
     except Exception as e:
         print(e)
         cv2.imshow("Camera", gray)
+    '''
     cv2.waitKey(1)
