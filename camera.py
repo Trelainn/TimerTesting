@@ -17,9 +17,9 @@ def create_video(images, video_name):
     cv2.destroyAllWindows()
     video.release()
 
-picam2 = Picamera2()
-picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (1920, 1080)}))
-picam2.start()
+camera = Picamera2()
+camera.configure(camera.create_preview_configuration(main={"format": 'XRGB8888', "size": (1920, 1080)}))
+camera.start()
 
 i = 0
 limit = random.randint(100, 101)
@@ -27,7 +27,7 @@ buffer = []
 cont = True
 
 while cont:
-    buffer.append(picam2.capture_array())
+    buffer.append(camera.capture_array())
     if len(buffer) > 90:
         buffer.pop(0)
     i = i + 1
