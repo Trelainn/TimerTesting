@@ -16,7 +16,7 @@ def create_video(images, video_name):
     for image in images:
         video.write(image)
         j = j+1
-        cv2.imwrite("Test/image"+str(j)+".jpg")
+        cv2.imwrite("Test/image"+str(j)+".jpg", image)
 
     cv2.destroyAllWindows()
     video.release()
