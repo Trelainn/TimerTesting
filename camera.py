@@ -2,12 +2,13 @@
 
 import cv2
 import random
+from datetime import datetime
 from picamera2 import Picamera2
 
 def create_video(images, video_name):
     frame = images[0]
     height, width, layers = frame.shape
-    print(str(width) + ',' + str(height))
+    now = datetime.now()
     fourcc = cv2.VideoWriter_fourcc(*'avc1')
     video = cv2.VideoWriter(video_name, fourcc, 30, (width, height), True)
 
@@ -16,7 +17,7 @@ def create_video(images, video_name):
     
     cv2.destroyAllWindows()
     video.release()
-
+    print(datetime.now() - now)
 camera = Picamera2()
 camera.configure(camera.create_preview_configuration(main={"format": 'XRGB8888', "size": (1920, 1080)}))
 camera.start()
