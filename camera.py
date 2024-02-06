@@ -14,7 +14,7 @@ def create_video(images, video_name):
 
     j = 0
     for image in images:
-        video.write(image)
+        video.write(cv2.cvtColor(image,cv2.COLOR_BGRA2BGR))
         j = j+1
         cv2.imwrite("Test/image"+str(j)+".jpg", image)
 
