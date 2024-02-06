@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import cv2
+import random
 from picamera2 import Picamera2
 
 def create_video(images, video_name):
