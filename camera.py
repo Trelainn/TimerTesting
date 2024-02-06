@@ -12,8 +12,11 @@ def create_video(images, video_name):
     fourcc = cv2.VideoWriter_fourcc(*'avc1')
     video = cv2.VideoWriter(video_name, fourcc, 30, (width, height))
 
+    i = 0
     for image in images:
         video.write(image)
+        i = i + 1
+        print(i)
 
     cv2.destroyAllWindows()
     video.release()
