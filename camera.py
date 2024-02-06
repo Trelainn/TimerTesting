@@ -1,35 +1,39 @@
 #!/usr/bin/python3
 
 import cv2
-
 from picamera2 import Picamera2
 
-# Grab images as numpy arrays and leave everything else to OpenCV.
+def create_video(images, video_name):
+    #frame = cv2.imread(images[0])
+    frame = images[0]
+    height, width, layers = frame.shape
+    print(str(width) + ',' + str(height))
+    fourcc = cv2.VideoWriter_fourcc(*'h264')
+    video = cv2.VideoWriter(video_name, fourcc, 30, (width, height))
 
-face_detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-cv2.startWindowThread()
+    for image in images:
+        video.write(image)
+
+    cv2.destroyAllWindows()
+    video.release()
 
 picam2 = Picamera2()
 picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (1920, 1080)}))
 picam2.start()
 
-while True:
-    im = picam2.capture_array()
-    detect = cv2.QRCodeDetector()
-    value, points, straight_qrcode = detect.detectAndDecode(im)
-    print (value)
-    '''
-    gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+i = 0
+limit = random.randint(100, 101)
+buffer = []
+cont = True
 
-    try:
-        faces = face_detector.detectMultiScale(gray, 1.1, 5)
-
-        for (x, y, w, h) in faces:
-            cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0))
-
-        cv2.imshow("Camera", im)
-    except Exception as e:
-        print(e)
-        cv2.imshow("Camera", gray)
-    '''
+while cont:
+    buffer.append(picam2.capture_array())
+    if len(buffer) > 90:
+        buffer.pop(0)
     cv2.waitKey(1)
+    i = i + 1
+    if i == limit:
+        cont = False
+    cv2.waitKey(1)
+
+create_video(buffer, 'test_video.mp4')
