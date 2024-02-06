@@ -8,7 +8,7 @@ def create_video(images, video_name):
     frame = images[0]
     height, width, layers = frame.shape
     print(str(width) + ',' + str(height))
-    fourcc = cv2.VideoWriter_fourcc(*'h264')
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
     video = cv2.VideoWriter(video_name, fourcc, 30, (width, height), True)
 
     for image in images:
