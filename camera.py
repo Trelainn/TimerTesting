@@ -12,11 +12,11 @@ def create_video(images, video_name):
     fourcc = cv2.VideoWriter_fourcc(*'avc1')
     video = cv2.VideoWriter(video_name, fourcc, 30, (width, height))
 
-    i = 0
+    j = 0
     for image in images:
         video.write(image)
-        i = i + 1
-        print(i)
+        j = j+1
+        cv2.imwrite("Test/image"+str(j)+".jpg")
 
     cv2.destroyAllWindows()
     video.release()
@@ -34,7 +34,6 @@ while cont:
     buffer.append(picam2.capture_array())
     if len(buffer) > 90:
         buffer.pop(0)
-    cv2.waitKey(1)
     i = i + 1
     if i == limit:
         cont = False
