@@ -5,19 +5,15 @@ import random
 from picamera2 import Picamera2
 
 def create_video(images, video_name):
-    #frame = cv2.imread(images[0])
     frame = images[0]
     height, width, layers = frame.shape
     print(str(width) + ',' + str(height))
     fourcc = cv2.VideoWriter_fourcc(*'h264')
     video = cv2.VideoWriter(video_name, fourcc, 30, (width, height), True)
 
-    j = 0
     for image in images:
         video.write(cv2.cvtColor(image,cv2.COLOR_BGRA2BGR))
-        j = j+1
-        cv2.imwrite("Test/image"+str(j)+".jpg", image)
-
+    
     cv2.destroyAllWindows()
     video.release()
 
