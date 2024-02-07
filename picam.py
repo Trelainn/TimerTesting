@@ -33,18 +33,19 @@ Thread(target=save_current_images, args=()).start()
 
 while True:  # making a loop
     try:  # used try so that if user pressed other than the given key error will not be shown
-        if keyboard.is_pressed('q'): 
+        user = input()
+        if user == 'q': 
             camera.start()
             camera_working = True
             print("Camera working")
-        if keyboard.is_pressed('w'):  
+        if user == 'w':  
             camera_working = False
             camera.stop()
             print("Camera stopped")
-        if keyboard.is_pressed('e'):  
+        if user == 'e':  
             Thread(target=create_video, args=(buffer, "test.mp4")).start()
             print("Video created")
-        if keyboard.is_pressed('r'):
+        if user == 'r':
             break  
             camera_working = False
             print("Camera stopped")
