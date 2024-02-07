@@ -1,7 +1,6 @@
 from picamera2 import Picamera2
 from threading import Thread
 import cv2
-import keyboard
 
 def create_video(images, video_name, fps = 15):
     frame = images[0]
