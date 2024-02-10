@@ -5,6 +5,7 @@ import random
 from datetime import datetime
 from picamera2 import Picamera2
 from threading import Thread
+from datetime import datetime
 
 class Camera:
     '''
@@ -26,6 +27,7 @@ class Camera:
 
     def create_video(self, images, video_name):
         if images:
+            now = datetime.now()
             frame = images[0]
             height, width, layers = frame.shape
             fourcc = cv2.VideoWriter_fourcc(*'avc1')
@@ -36,6 +38,7 @@ class Camera:
             
             cv2.destroyAllWindows()
             video.release()
+            print(datetime.now()-now)
         else:
             print('no buffer')
 
