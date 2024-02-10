@@ -18,7 +18,7 @@ Thread(target=camera.create_video, args=(camera.buffer, 'Test2')).start()
 
 camera.stop_camera()
 time.sleep(3)
-camera.create_camera()
+camera.create_camera(image_width=640, image_height=480, fps=30)
 time.sleep(5)
 
 Thread(target=camera.create_video, args=(camera.buffer, 'Test3')).start()
