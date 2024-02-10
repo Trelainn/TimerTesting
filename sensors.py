@@ -9,6 +9,8 @@ time.sleep(5)
 
 camera.create_video(camera.buffer, 'Test1')
 
+camera.camera_working = True
+
 time.sleep(2)
 
 camera.create_video(camera.buffer, 'Test2')
