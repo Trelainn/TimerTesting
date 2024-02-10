@@ -4,7 +4,7 @@ import camera
 import time
 from threading import Thread
 
-camera = camera.Camera()#image_width=1280, image_height=720, fps=30)
+camera = camera.Camera(image_width=1280, image_height=720, fps=20)
 camera.camera_working = True
 
 time.sleep(5)
