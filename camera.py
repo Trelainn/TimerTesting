@@ -10,7 +10,7 @@ from datetime import datetime
 class Camera:
 
     def __init__(self):
-        pass
+        self.camera = Picamera2()
 
     def create_video(self, images, video_name):
         if images:
@@ -49,7 +49,6 @@ class Camera:
     def create_camera(self, image_limit = 90, image_width = 640, image_height = 480, fps = 30):
         self.system_on = False
         time.sleep(1)
-        self.camera = Picamera2()
         self.camera.configure(self.camera.create_preview_configuration(main={"format": 'XRGB8888', "size": (image_width, image_height)}))
         self.system_on = True
         self.image_limit = image_limit
