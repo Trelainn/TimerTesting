@@ -18,6 +18,7 @@ class Camera:
         self.camera.configure(self.camera.create_preview_configuration(main={"format": 'XRGB8888', "size": (image_width, image_height)}))
         self.camera.start()
         self.camera_working = False
+        self.system_on = True
         self.buffer = []
         self.image_limit = image_limit
         Thread(target=self.run_camera, args=()).start()
@@ -36,9 +37,9 @@ class Camera:
             video.release()
         else:
             print('no buffer')
-            
+
     def run_camera(self):
-        while True:
+        while self.system_on:
             if self.camera_working:
                 self.buffer.append(self.camera.capture_array())
                 if len(self.buffer) > self.image_limit:
