@@ -4,13 +4,12 @@ import camera
 import time
 from threading import Thread
 
-camera = camera.Camera(image_width=1280, image_height=720, fps=30)
+camera = camera.Camera()#image_width=1280, image_height=720, fps=30)
+camera.camera_working = True
 
 time.sleep(5)
 
 Thread(target=camera.create_video, args=(camera.buffer, 'Test1')).start()
-
-camera.camera_working = True
 
 time.sleep(2)
 
