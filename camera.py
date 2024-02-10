@@ -23,17 +23,19 @@ class Camera:
         Thread(target=self.run_camera, args=()).start()
 
     def create_video(self, images, video_name):
-        frame = images[0]
-        height, width, layers = frame.shape
-        fourcc = cv2.VideoWriter_fourcc(*'avc1')
-        video = cv2.VideoWriter('videos/'+video_name+'.mp4', fourcc, 15, (width, height), True)
+        if images:
+            frame = images[0]
+            height, width, layers = frame.shape
+            fourcc = cv2.VideoWriter_fourcc(*'avc1')
+            video = cv2.VideoWriter('videos/'+video_name+'.mp4', fourcc, 15, (width, height), True)
 
-        for image in images:
-            video.write(cv2.cvtColor(image,cv2.COLOR_BGRA2BGR))
-        
-        cv2.destroyAllWindows()
-        video.release()
-
+            for image in images:
+                video.write(cv2.cvtColor(image,cv2.COLOR_BGRA2BGR))
+            
+            cv2.destroyAllWindows()
+            video.release()
+        else:
+            print('no buffer')
     def run_camera(self):
         while True:
             if self.camera_working:
