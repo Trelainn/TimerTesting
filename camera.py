@@ -9,8 +9,8 @@ from datetime import datetime
 
 class Camera:
 
-    def __init__(self, image_limit = 90, image_width = 640, image_height = 480, fps = 30):
-        self.create_camera(self, image_limit=image_limit, image_width=image_width, image_height=image_height, fps=fps)
+    def __init__(self):
+        pass
 
     def create_video(self, images, video_name):
         if images:
