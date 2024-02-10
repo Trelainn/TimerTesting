@@ -22,7 +22,7 @@ class Camera:
         self.image_limit = image_limit
         #Thread(target=self.run_camera, args=()).start()
 
-    def create_video(images, video_name):
+    def create_video(self, images, video_name):
         frame = images[0]
         height, width, layers = frame.shape
         fourcc = cv2.VideoWriter_fourcc(*'avc1')
