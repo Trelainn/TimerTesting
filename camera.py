@@ -36,6 +36,7 @@ class Camera:
             video.release()
         else:
             print('no buffer')
+            
     def run_camera(self):
         while True:
             if self.camera_working:
