@@ -18,6 +18,12 @@ camera.create_video(camera.buffer, 'Test2')
 time.sleep(3)
 
 camera.create_video(camera.buffer, 'Test3')
+
+print('Finished')
+
+time.sleep(1)
+
+camera.system_on = False
 '''
 def post_test(req):
     response = req.post("http://localhost/update_status", json={'temperature': 25})
