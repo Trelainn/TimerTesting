@@ -5,15 +5,15 @@ import time
 
 camera = camera.Camera()
 
-time.sleep(1000)
+time.sleep(5)
 
 camera.create_video(camera.buffer, 'Test1')
 
-time.sleep(2000)
+time.sleep(2)
 
 camera.create_video(camera.buffer, 'Test2')
 
-time.sleep(3000)
+time.sleep(3)
 
 camera.create_video(camera.buffer, 'Test3')
 '''
