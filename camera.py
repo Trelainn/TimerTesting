@@ -26,7 +26,7 @@ class Camera:
         frame = images[0]
         height, width, layers = frame.shape
         fourcc = cv2.VideoWriter_fourcc(*'avc1')
-        video = cv2.VideoWriter('videos/'+video_name, fourcc, 15, (width, height), True)
+        video = cv2.VideoWriter('videos/'+video_name+'.mp4', fourcc, 15, (width, height), True)
 
         for image in images:
             video.write(cv2.cvtColor(image,cv2.COLOR_BGRA2BGR))
