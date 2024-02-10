@@ -54,4 +54,5 @@ class Camera:
         self.image_limit = image_limit
         self.fps = fps
         self.camera_working = False
+        self.buffer = []
         Thread(target=self.run_camera, args=()).start()
