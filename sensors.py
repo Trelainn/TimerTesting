@@ -2,22 +2,23 @@ import requests
 import datetime
 import camera
 import time
+from threading import Thread
 
 camera = camera.Camera()
 
 time.sleep(5)
 
-camera.create_video(camera.buffer, 'Test1')
+Thread(target=camera.create_video, args=(camera.buffer, 'Test1')).start()
 
 camera.camera_working = True
 
 time.sleep(2)
 
-camera.create_video(camera.buffer, 'Test2')
+Thread(target=camera.create_video, args=(camera.buffer, 'Test2')).start()
 
 time.sleep(3)
 
-camera.create_video(camera.buffer, 'Test3')
+Thread(target=camera.create_video, args=(camera.buffer, 'Test3')).start()
 
 print('Finished')
 
