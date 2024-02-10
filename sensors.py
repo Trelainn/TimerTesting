@@ -11,17 +11,17 @@ time.sleep(5)
 
 Thread(target=camera.create_video, args=(camera.buffer, 'Test1')).start()
 
-time.sleep(2)
+#time.sleep(2)
 
 Thread(target=camera.create_video, args=(camera.buffer, 'Test2')).start()
 
-time.sleep(3)
+#time.sleep(3)
 
 Thread(target=camera.create_video, args=(camera.buffer, 'Test3')).start()
 
 print('Finished')
 
-time.sleep(1)
+#time.sleep(1)
 
 camera.system_on = False
 '''
