@@ -20,7 +20,7 @@ class Camera:
         self.camera_working = False
         self.buffer = []
         self.image_limit = image_limit
-        #Thread(target=self.run_camera, args=()).start()
+        Thread(target=self.run_camera, args=()).start()
 
     def create_video(self, images, video_name):
         frame = images[0]
