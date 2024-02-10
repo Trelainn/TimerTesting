@@ -18,6 +18,8 @@ Thread(target=camera.create_video, args=(camera.buffer, 'Test2')).start()
 #time.sleep(3)
 
 Thread(target=camera.create_video, args=(camera.buffer, 'Test3')).start()
+Thread(target=camera.create_video, args=(camera.buffer, 'Test4')).start()
+Thread(target=camera.create_video, args=(camera.buffer, 'Test5')).start()
 
 print('Finished')
 
