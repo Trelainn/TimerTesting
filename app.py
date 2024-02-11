@@ -4,7 +4,7 @@ from multiprocessing import Manager
 
 app = Flask(__name__)
 
-current_status = {}#Manager().dict()
+current_status = Manager().dict()
 
 current_status['temperature'] = 0
 current_status['humidity'] = 0
@@ -34,7 +34,3 @@ def update_status():
     current_status['camera_connection'] = request.json['camera_connection']
     '''
     return current_status
-
-
-if __name__ == '__main__':
-	app.run(debug=False, host='0.0.0.0', port=80)
