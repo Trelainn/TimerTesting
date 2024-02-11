@@ -26,7 +26,7 @@ def status():
 def key():
     try:
         key = environ.get('KEY')
-    except:
+    except Exception:
         key = 'No key found'
     return key
 
