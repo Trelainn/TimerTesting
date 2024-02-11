@@ -20,7 +20,7 @@ current_status['race_status'] = 'no race'
 
 @app.route('/status', methods=['GET'])
 def status():
-    return current_status
+    return str(current_status)
 
 @app.route('/key', methods=['GET'])
 def key():
