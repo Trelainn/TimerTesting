@@ -1,0 +1,40 @@
+from flask import (Flask, Blueprint, flash, g, render_template, request, url_for, session, redirect, send_file, Response)
+from database import get_db
+from multiprocessing import Manager
+
+app = Flask(__name__)
+
+current_status = {}#Manager().dict()
+
+current_status['temperature'] = 0
+current_status['humidity'] = 0
+current_status['battery_percentage'] = 0
+
+current_status['board_connection'] = False
+current_status['antenna_connection'] = False
+current_status['camera_connection'] = False
+
+current_status['race_status'] = 'no race'
+
+
+@app.route('/status', methods=['GET'])
+def status():
+
+	return current_status
+
+@app.route('/update_status', methods=['POST'])
+def update_status():
+
+    current_status['temperature'] = request.json['temperature']
+    '''
+    current_status['battery_percentage'] = request.json['battery_percentage']
+    current_status['humidity'] = request.json['humidity']
+    current_status['board_connection'] = request.json['board_connection']
+    current_status['antenna_connection'] = request.json['antenna_connection']
+    current_status['camera_connection'] = request.json['camera_connection']
+    '''
+    return current_status
+
+
+if __name__ == '__main__':
+	app.run(debug=False, host='0.0.0.0', port=80)
