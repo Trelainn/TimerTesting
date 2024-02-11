@@ -1,10 +1,11 @@
 from flask import (Flask, Blueprint, flash, g, render_template, request, url_for, session, redirect, send_file, Response)
 from database import get_db
 from multiprocessing import Manager
+from os import environ 
 
 app = Flask(__name__)
 
-current_status = Manager().dict()
+current_status = {}#Manager().dict()
 
 current_status['temperature'] = 0
 current_status['humidity'] = 0
@@ -19,8 +20,15 @@ current_status['race_status'] = 'no race'
 
 @app.route('/status', methods=['GET'])
 def status():
+    return current_status
 
-	return current_status
+@app.route('/key', methods=['GET'])
+def key():
+    try:
+        key = environ.get('KEY')
+    except:
+        key = 'No key found'
+    return key
 
 @app.route('/update_status', methods=['POST'])
 def update_status():
