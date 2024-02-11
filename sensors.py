@@ -4,6 +4,8 @@ import camera
 import time
 from threading import Thread
 
+
+'''
 camera = camera.Camera()
 camera.create_camera(image_width=1280, image_height=720, fps=20)
 camera.start_camera()
@@ -32,6 +34,7 @@ time.sleep(1)
 
 camera.system_on = False
 '''
+
 def post_test(req):
     response = req.post("http://localhost/update_status", json={'temperature': 25})
     print(response)
@@ -47,4 +50,5 @@ now = datetime.datetime.now()
 print('Begin')
 post_test(session)
 print(datetime.datetime.now()-now)
-'''
+
+
