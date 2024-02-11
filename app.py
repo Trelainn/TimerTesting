@@ -5,7 +5,7 @@ from os import environ
 
 app = Flask(__name__)
 
-current_status = {}
+current_status = Manager().dict()
 
 current_status['temperature'] = 0
 current_status['humidity'] = 0
