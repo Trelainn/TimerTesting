@@ -254,18 +254,18 @@ def add_participant():
                     error_image = e
                     print('The file could not be saved due to the following error: '+str(e))
             db, c = get_db()
-            c.execute('select * from race_competitors where race_number = %s and tag = %s',(status['cuurent_race_number'], tag))
+            c.execute('select * from race_competitors where race_number = %s and tag = %s',(status['current_race_number'], tag))
             competitor = c.fetchone()
             if competitor is None:
                 c.execute(
 					'insert into race_competitors (race_number, tag, nickname, user_id, toy, gender, weight_category, photo, video_permission) values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', 
-					(status['cuurent_race_number'], tag, nickname, user_id, toy, photo, video_permission)
+					(status['current_race_number'], tag, nickname, user_id, toy, photo, video_permission)
 				)
                 message = 'New participant added'
             else:
                 c.execute(
 					'update race_competitors set nickname = %s, user_id = %s, toy = %s, gender = %s, weight_category = %s, photo = %s, video_permission = %s where race_number = %s and tag = %s', 
-					(nickname, user_id, toy, gender, weight_category, photo, video_permission, status['cuurent_race_number'], tag)
+					(nickname, user_id, toy, gender, weight_category, photo, video_permission, status['current_race_number'], tag)
 				)
                 message = 'Participant updated'
             db.commit()
