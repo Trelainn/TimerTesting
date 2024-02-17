@@ -198,8 +198,8 @@ def select_track():
             return {'ok': True, 'process': 'Select track', 'status': 'success'}
         else:
             return {'ok': False, 'process': 'Select track', 'status': 'failed'}
-    except:
-        return {'ok': False}    
+    except Exception as e: 
+        return {'ok': False, "error": str(e)}     
     
 @app.route('/race_type', methods=['POST'])
 def race_type():
