@@ -67,7 +67,7 @@ def get_race_info(race_number, user_id):
         race_info['status'] = race[3]
         race_info['track'] = race[4]
         race_info['race_type'] = race[5]
-        race_info['limit'] = race[6]
+        race_info['limit_number'] = race[6]
         if  race_info['status'] == 'finished':
             race_info['race_time'] = (race[8] - race[7]).seconds
         else:
@@ -157,6 +157,10 @@ def get_video_info(race_number, tag, lap, user_id):
 def status():
     return get_current_status()
 
+@app.route('/system_parameters', methods=['POST'])
+def system_parameters():
+    return get_system_parameters()
+
 @app.route('/create_race', methods=['POST'])
 def create_race():
     status = get_system_parameters()
@@ -203,7 +207,7 @@ def race_type():
         if status['race_status'] == 'configure_race' and status['race_owner'] == user_id:
             db, c = get_db()
             c.execute(
-                'update races set race_type = %s, limit = %s where race_number = %s', (request.json['race_type'], request.json['limit'], status['next_race_number']-1)
+                'update races set race_type = %s, limit_number = %s where race_number = %s', (request.json['race_type'], request.json['limit_number'], status['next_race_number']-1)
 			)
             db.commit()
             return {'ok': True, 'process': 'Race type', 'status': 'success'}
@@ -335,6 +339,7 @@ def profile_picture(race_number, tag):
 def update_status():
     pass
 
+'''
 @app.route('/environment_variables', methods=['GET'])
 def environment_variables():
     host = environ.get('HOST')
@@ -343,6 +348,8 @@ def environment_variables():
     database = environ.get('DATABASE')
 
     return {"host": host, "user":user, "password":password, "database":database}
+'''
+    
 
 if __name__ == '__main__':
 	app.run(debug=True, host='0.0.0.0', port=80)
