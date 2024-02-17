@@ -287,7 +287,7 @@ def start_race():
         if status['race_status'] == 'configure_race' and status['race_owner'] == user_id:
             db, c = get_db()
             c.execute(
-                'update races set race_begin_time = %s, status = %s where race_number = %s', (datetime.now(), 'racing', status['race_number']-1,)
+                'update races set race_begin_time = %s, status = %s where race_number = %s', (datetime.now(), 'racing', status['current_race_number'],)
 			)
             db.commit()
             return {'ok': True, 'process': 'Start Race', 'status': 'success'}
@@ -300,19 +300,19 @@ def record_time(tag, time):
     try:
         if status['race_status'] == 'racing':
             db, c = get_db()
-            c.execute('select lap from times where tag = %s and race_number = %s order by lap desc', (tag, status['race_number']-1))
+            c.execute('select lap from times where tag = %s and race_number = %s order by lap desc', (tag, status['current_race_number']))
             lap_number = c.fetchone()
-            c.execute('select video_permission from race_competitors where tag = %s and race_number = %s', (tag, status['race_number']-1))
+            c.execute('select video_permission from race_competitors where tag = %s and race_number = %s', (tag, status['current_race_number']))
             video_permission = c.fetchone()[0]
             if lap_number is not None:
                 lap_number = float(lap_number[0])+ 1
             else:
                 lap_number = 1
             if video_permission:
-                video_name = str(status['race_number']-1)+'_'+tag+'_'+lap_number
-            c.execute('insert into times (race_number, tag, lap, time_milliseconds) values (%s, %s, %s, %s)', (status['race_number']-1, tag, lap_number, time))
+                video_name = str(status['current_race_number'])+'_'+tag+'_'+lap_number
+            c.execute('insert into times (race_number, tag, lap, time_milliseconds) values (%s, %s, %s, %s)', (status['current_race_number'], tag, lap_number, time))
             db.commit()
-            return {'ok': True, 'process': 'Record Time', 'status': 'success', 'race_number': status['race_number']-1, 'tag': tag, 'lap_number': lap_number, 'time':time, 'video_name': video_name, 'video_permission': video_permission}
+            return {'ok': True, 'process': 'Record Time', 'status': 'success', 'race_number': status['current_race_number'], 'tag': tag, 'lap_number': lap_number, 'time':time, 'video_name': video_name, 'video_permission': video_permission}
         return {'ok': False, 'process': 'Record Time', 'status': 'failed'}
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
@@ -325,7 +325,7 @@ def stop_race():
         if status['race_status'] == 'configure_race' and status['race_owner'] == user_id:
             db, c = get_db()
             c.execute(
-                'update races set race_final_time = %s, status = %s where race_number = %s', (datetime.now(), 'finished', status['race_number']-1,)
+                'update races set race_final_time = %s, status = %s where race_number = %s', (datetime.now(), 'finished', status['current_race_number'],)
 			)
             db.commit()
     except Exception as e: 
