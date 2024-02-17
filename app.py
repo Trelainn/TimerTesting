@@ -38,14 +38,15 @@ def get_system_parameters():
     system_paramters = c.fetchall()
     current_status = {}
     if system_paramters is not None:
-        current_status['race_status'] = system_paramters[1][1]
+        current_status['race_owner'] = system_paramters[1][1]
+        current_status['race_status'] = system_paramters[2][1]
         current_status['next_race_number'] = int(system_paramters[0][1])
     return current_status 
 
 def update_system_parameters(race_number, race_status, user_id):
     db, c = get_db()
     c.execute(
-        'update system_parameters set value = %s where id = %s', (race_number + 1, 'next_race_number')
+        'update system_parameters set value = %s where id = %s', (race_number, 'next_race_number')
     )
     c.execute(
         'update system_parameters set value = %s where id = %s', (race_status, 'race_status')
