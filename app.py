@@ -70,8 +70,10 @@ def get_race_info(race_number, user_id):
         race_info['limit_number'] = race[6]
         if  race_info['status'] == 'finished':
             race_info['race_time'] = (race[8] - race[7]).seconds
-        else:
+        if race[7] is not None:
             race_info['race_time'] = (race[7]).seconds
+        else:
+            race_info['race_time'] = 0
         race_info['race_competitors'] = []
         c.execute('select tag from race_competitors where race_number = %s', (race_number, ))
         race_competitors = c.fetchall()
