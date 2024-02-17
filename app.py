@@ -41,6 +41,8 @@ def get_system_parameters():
         current_status['race_owner'] = system_paramters[1][1]
         current_status['race_status'] = system_paramters[2][1]
         current_status['next_race_number'] = int(system_paramters[0][1])
+        if current_status['race_status'] != 'no race':
+            current_status['current_race_number'] = current_status['next_race_number'] - 1
     return current_status 
 
 def update_system_parameters(race_number, race_status, user_id):
