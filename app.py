@@ -259,7 +259,7 @@ def add_participant():
             if competitor is None:
                 c.execute(
 					'insert into race_competitors (race_number, tag, nickname, user_id, toy, gender, weight_category, photo, video_permission) values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', 
-					(status['current_race_number'], tag, nickname, user_id, toy, photo, video_permission)
+					(status['current_race_number'], tag, nickname, user_id, toy, gender, weight_category, photo, video_permission)
 				)
                 message = 'New participant added'
             else:
