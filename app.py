@@ -56,9 +56,9 @@ def update_system_parameters(race_number, race_status, user_id):
     )
     db.commit()
 
-def get_race_info(race_number, user_id):
+def get_race_info(race_number, code, user_id):
     db, c = get_db()
-    c.execute('select * from races where race_number = %s', (race_number, ))
+    c.execute('select * from races where race_number = %s and code = %s', (race_number, code))
     race = c.fetchone()
     race_info = {}
     race_info['race_number'] = race_number
@@ -325,8 +325,9 @@ def stop_race():
 def view_race():
     user_id = request.json['user_id']
     race_number = request.json['race_number']
+    race_code = request.json['race_code']
     system_parameters = get_system_parameters()
-    return get_race_info(race_number=race_number, user_id=user_id)
+    return get_race_info(race_number=race_number, code=race_code, user_id=user_id)
     if system_parameters['race_number']-1 == race_number:
         return get_race_info(race_number=race_number, user_id=user_id)
     else:
