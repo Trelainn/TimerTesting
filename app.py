@@ -229,8 +229,8 @@ def race_type():
             return {'ok': True, 'process': 'Race type', 'status': 'success'}
         else:
             return {'ok': False, 'process': 'Race type', 'status': 'failed'}
-    except:
-        return {'ok': False}   
+    except Exception as e: 
+        return {'ok': False, "error": str(e)}     
     
 @app.route('/add_participant', methods=['POST'])
 def add_participant():
@@ -272,8 +272,8 @@ def add_participant():
             return {'ok': True, 'status': 'success', 'process': 'Add Participant', 'message': message,  'image_error': error_image}
         else:
             return {'ok': False, 'process': 'Add Participant', 'status': 'failed'}
-    except:
-        return {'ok': False} 
+    except Exception as e: 
+        return {'ok': False, "error": str(e)}     
 
 @app.route('/start_race', methods=['POST'])
 def start_race():
@@ -288,9 +288,8 @@ def start_race():
             db.commit()
             return {'ok': True, 'process': 'Start Race', 'status': 'success'}
         return {'ok': False, 'process': 'Start Race', 'status': 'failed'}
-    except:
-        pass
-    return {'ok': False, 'process': 'Start Race', 'status': 'failed'}
+    except Exception as e: 
+        return {'ok': False, "error": str(e)}     
 @app.route('/record_time/<tag>/<time>', methods=['POST'])
 def record_time(tag, time):
     status = get_system_parameters()
@@ -311,9 +310,8 @@ def record_time(tag, time):
             db.commit()
             return {'ok': True, 'process': 'Record Time', 'status': 'success', 'race_number': status['race_number']-1, 'tag': tag, 'lap_number': lap_number, 'time':time, 'video_name': video_name, 'video_permission': video_permission}
         return {'ok': False, 'process': 'Record Time', 'status': 'failed'}
-    except:
-        pass
-    return {'ok': False, 'process': 'Record Time', 'status': 'failed'}
+    except Exception as e: 
+        return {'ok': False, "error": str(e)}     
 
 @app.route('/stop_race', methods=['POST'])
 def stop_race():
@@ -326,8 +324,8 @@ def stop_race():
                 'update races set race_final_time = %s, status = %s where race_number = %s', (datetime.now(), 'finished', status['race_number']-1,)
 			)
             db.commit()
-    except:
-        pass
+    except Exception as e: 
+        return {'ok': False, "error": str(e)}     
 @app.route('/view_race', methods=['POST'])
 def view_race():
     user_id = request.json['user_id']
