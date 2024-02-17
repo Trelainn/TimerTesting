@@ -45,7 +45,7 @@ def get_system_parameters():
 def update_system_parameters(race_number, race_status, user_id):
     db, c = get_db()
     c.execute(
-        'update system_parameters set value = %s where id = next_race_number', (race_number + 1, )
+        'update system_parameters set value = %s where id = %s', (race_number + 1, 'next_race_number')
     )
     c.execute(
         'update system_parameters set value = %s where id = race_status', (race_status, )
