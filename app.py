@@ -59,7 +59,7 @@ def update_system_parameters(race_number, race_status, user_id):
 def get_race_info(race_number, code, user_id):
     db, c = get_db()
     status = get_system_parameters()
-    if status['race_status'] != 'no race' and race_number == status['race_status']:
+    if status['race_status'] != 'no race' and race_number == (status['next_race_number']-1):
         c.execute('select * from races where race_number = %s', (race_number, ))
     else:
         c.execute('select * from races where race_number = %s and code = %s', (race_number, code))
