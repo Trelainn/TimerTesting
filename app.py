@@ -269,7 +269,7 @@ def add_participant():
 				)
                 message = 'Participant updated'
             db.commit()
-            return {'ok': True, 'status': 'success', 'process': 'Add Participant', 'message': message,  'image_error': error_image}
+            return {'ok': True, 'status': 'success', 'process': 'Add Participant', 'message': message,  'image_error': str(error_image)}
         else:
             return {'ok': False, 'process': 'Add Participant', 'status': 'failed'}
     except Exception as e: 
