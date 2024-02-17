@@ -329,6 +329,7 @@ def stop_race():
                 'update races set race_final_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'finished', status['current_race_number'],)
 			)
             db.commit()
+            update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ', code=' ')
             return {'ok': True, 'process': 'Stop Race', 'status': 'success'}
         return {'ok': False, 'process': 'Stop Race', 'status': 'failed'}
     except Exception as e: 
