@@ -290,7 +290,7 @@ def start_race():
                 'update races set race_begin_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'racing', status['current_race_number'],)
 			)
             db.commit()
-            update_system_parameters(race_number=status['next_race_number'], race_status='racing', user_id=status['race_owner'], code=status['code'])
+            update_system_parameters(race_number=status['next_race_number'], race_status='racing', user_id=status['race_owner'], code=status['race_code'])
             return {'ok': True, 'process': 'Start Race', 'status': 'success'}
         return {'ok': False, 'process': 'Start Race', 'status': 'failed'}
     except Exception as e: 
