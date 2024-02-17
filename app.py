@@ -48,10 +48,10 @@ def update_system_parameters(race_number, race_status, user_id):
         'update system_parameters set value = %s where id = %s', (race_number + 1, 'next_race_number')
     )
     c.execute(
-        'update system_parameters set value = %s where id = race_status', (race_status, )
+        'update system_parameters set value = %s where id = %s', (race_status, 'race_status')
     )
     c.execute(
-        'update system_parameters set value = %s where id = race_owner', (user_id ,)
+        'update system_parameters set value = %s where id = %s', (user_id, 'race_owner')
     )
     db.commit()
 
