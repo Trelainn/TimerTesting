@@ -180,7 +180,7 @@ def create_race():
         else:
             return {'ok': False, 'process': 'Start race', 'status': 'failed', 'error': 'race already created'}
     except Exception as e: 
-        return {'ok': False, "error": e}    
+        return {'ok': False, "error": str(e)}    
 
 @app.route('/select_track', methods=['POST'])
 def select_track():
