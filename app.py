@@ -335,5 +335,14 @@ def profile_picture(race_number, tag):
 def update_status():
     pass
 
+@app.route('/environment_variables', methods=['POST'])
+def environment_variables():
+    host = environ.get('HOST')
+    user = environ.get('USER')
+    password = environ.get('PASSWORD')
+    database = environ.get('DATABASE')
+
+    return {"host": host, "user":user, "password":password, "database":database}
+
 if __name__ == '__main__':
 	app.run(debug=True, host='0.0.0.0', port=80)
