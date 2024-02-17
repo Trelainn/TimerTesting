@@ -83,7 +83,7 @@ def get_race_info(race_number, code, user_id):
         if  race_info['status'] == 'finished':
             race_info['race_time'] = (race[8] - race[7]).seconds
         if race[7] is not None:
-            race_info['race_time'] = (race[7]).seconds
+            race_info['race_time'] = (datetime.now()-race[7]).seconds
         else:
             race_info['race_time'] = 0
         race_info['race_competitors'] = []
