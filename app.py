@@ -115,7 +115,7 @@ def get_competitor_info(race_number, tag, user_id):
 
 def get_laps_info(race_number, tag, video_permission, user_id):
     db, c = get_db()
-    c.execute('select * from race_competitors_laps where race_number = %s and tag = %s order by ASC', (race_number, tag))
+    c.execute('select * from race_competitors_laps where race_number = %s and tag = %s', (race_number, tag))
     competitor_laps = c.fetchall()
     competitor_laps_info = {}
     competitor_laps_info['race_number'] = race_number
