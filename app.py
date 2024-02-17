@@ -45,7 +45,7 @@ def get_system_parameters():
             current_status['current_race_number'] = current_status['next_race_number'] - 1
     return current_status 
 
-def update_system_parameters(race_number, race_status, user_id):
+def update_system_parameters(race_number, race_status, user_id, code):
     db, c = get_db()
     c.execute(
         'update system_parameters set value = %s where id = %s', (race_number, 'next_race_number')
@@ -55,6 +55,9 @@ def update_system_parameters(race_number, race_status, user_id):
     )
     c.execute(
         'update system_parameters set value = %s where id = %s', (user_id, 'race_owner')
+    )
+    c.execute(
+        'update system_parameters set value = %s where id = %s', (code, 'race_code')
     )
     db.commit()
 
@@ -105,7 +108,7 @@ def get_competitor_info(race_number, tag, user_id):
         competitor_info['weight_category'] = competitor[6]
         competitor_info['photo'] = competitor[7]
         if competitor_info['photo']:
-            competitor_info['photo_url'] = url_for('profile_photo', race_number=race_number, tag=tag)
+            competitor_info['photo_url'] = url_for('profile_picture', race_number=race_number, tag=tag)
         competitor_info['video_permission'] = competitor[8]
         if competitor_info['video_permission'] and competitor_info['user_id'] == user_id:
             competitor_info['laps'] = get_laps_info(race_number, tag, True, user_id)
@@ -190,7 +193,7 @@ def create_race():
             c.execute(
                 'insert into races (race_number, user_id, code, race_status) values (%s, %s, %s, %s)', (race_number , user_id, race_code, race_status)
 			)
-            update_system_parameters(race_number=race_number+1, race_status=race_status, user_id=user_id)
+            update_system_parameters(race_number=race_number+1, race_status=race_status, user_id=user_id, code=race_code)
             db.commit()
             return {'ok': True, 'process': 'Start race', 'status': 'success'}
         else:
@@ -249,7 +252,7 @@ def add_participant():
             error_image = None
             if photo:
                 try:
-                    image.save(str(Path().absolute())+'/static/profile_pictures/'+str(tag)+'.jpg')
+                    image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(tag)+'_'+str(status['race_code'])+'.jpeg')
                 except Exception as e:
                     error_image = e
                     print('The file could not be saved due to the following error: '+str(e))
@@ -347,8 +350,8 @@ def video(race_number, tag, lap, user_id):
             return Response("Server available", status=400,)
         return Response("No video available", status=403,)
 @app.route('/profile_picture/', methods=['POST'])
-def profile_picture(race_number, tag):
-	return send_file('/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'+str(race_number)+'_'+str(tag)+'.jpeg', as_attachment=True)
+def profile_picture(race_number, tag, code):
+	return send_file('/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'+str(race_number)+'_'+str(tag)+'_'+str(code)+'.jpeg', as_attachment=True)
 
 @app.route('/update_status', methods=['POST'])
 def update_status():
