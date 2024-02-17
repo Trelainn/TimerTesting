@@ -325,7 +325,7 @@ def stop_race():
         if status['race_status'] == 'configure_race' and status['race_owner'] == user_id:
             db, c = get_db()
             c.execute(
-                'update races set race_final_time = %s, status = %s where race_number = %s', (datetime.now(), 'finished', status['current_race_number'],)
+                'update races set race_final_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'finished', status['current_race_number'],)
 			)
             db.commit()
     except Exception as e: 
