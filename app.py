@@ -164,6 +164,12 @@ def status():
 def system_parameters():
     return get_system_parameters()
 
+@app.route('/reset_system_parameters', methods=['GET'])
+def reset_system_parameters():
+    status = get_system_parameters()
+    update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ')
+    return get_system_parameters()
+
 @app.route('/create_race', methods=['POST'])
 def create_race():
     status = get_system_parameters()
