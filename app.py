@@ -45,13 +45,13 @@ def get_system_parameters():
 def update_system_parameters(race_number, race_status, user_id):
     db, c = get_db()
     c.execute(
-        'update system_parameters set value = %s where id = "next_race_number"', (race_number + 1,)
+        'update system_parameters set value = %s where id = next_race_number', (race_number + 1, )
     )
     c.execute(
-        'update system_parameters set value = %s where id = "race_status"', (race_status ,)
+        'update system_parameters set value = %s where id = race_status', (race_status, )
     )
     c.execute(
-        'update system_parameters set value = %s where id = "race_owner"', (user_id ,)
+        'update system_parameters set value = %s where id = race_owner', (user_id ,)
     )
     db.commit()
 
@@ -174,8 +174,8 @@ def create_race():
             c.execute(
                 'insert into races (race_number, user_id, code, race_status) values (%s, %s, %s, %s)', (race_number , user_id, race_code, race_status)
 			)
-            db.commit()
             update_system_parameters(race_number=race_number+1, race_status=race_status, user_id=user_id)
+            db.commit()
             return {'ok': True, 'process': 'Start race', 'status': 'success'}
         else:
             return {'ok': False, 'process': 'Start race', 'status': 'failed', 'error': 'race already created'}
