@@ -322,7 +322,7 @@ def stop_race():
     status = get_system_parameters()
     user_id = request.json['user_id']
     try:
-        if status['race_status'] == 'configure_race' and status['race_owner'] == user_id:
+        if status['race_status'] == 'racing' and status['race_owner'] == user_id:
             db, c = get_db()
             c.execute(
                 'update races set race_final_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'finished', status['current_race_number'],)
