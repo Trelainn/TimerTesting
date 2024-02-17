@@ -157,7 +157,7 @@ def get_video_info(race_number, tag, lap, user_id):
 def status():
     return get_current_status()
 
-@app.route('/system_parameters', methods=['POST'])
+@app.route('/system_parameters', methods=['GET'])
 def system_parameters():
     return get_system_parameters()
 
@@ -179,8 +179,8 @@ def create_race():
             return {'ok': True, 'process': 'Start race', 'status': 'success'}
         else:
             return {'ok': False, 'process': 'Start race', 'status': 'failed', 'error': 'race already created'}
-    except:
-        return {'ok': False}    
+    except Exception as e: 
+        return {'ok': False, "error": e}    
 
 @app.route('/select_track', methods=['POST'])
 def select_track():
