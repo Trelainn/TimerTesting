@@ -287,7 +287,7 @@ def start_race():
         if status['race_status'] == 'configure_race' and status['race_owner'] == user_id:
             db, c = get_db()
             c.execute(
-                'update races set race_begin_time = %s, status = %s where race_number = %s', (datetime.now(), 'racing', status['current_race_number'],)
+                'update races set race_begin_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'racing', status['current_race_number'],)
 			)
             db.commit()
             return {'ok': True, 'process': 'Start Race', 'status': 'success'}
