@@ -5,7 +5,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(12, GPIO.OUT)
 GPIO.output(12, True)
 serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.01)
-serialport.write(b'B')
+serialport.write(str.encode(chr(65+0)))
 
 while True:
   reading = serialport.readlines()
