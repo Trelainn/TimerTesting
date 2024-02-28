@@ -9,5 +9,5 @@ serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.01)
 while True:
   reading = serialport.readlines()
   if reading:
-    data = {"temperatue": reading[0].decode()}
+    data = {"Temperature": reading[0].decode().remove('\r').remove('\n')}
     print(data)
