@@ -1,6 +1,6 @@
 import requests
 import datetime
-import camera
+#import camera
 import time
 from threading import Thread
 
@@ -36,16 +36,12 @@ camera.system_on = False
 '''
 
 def post_test(req):
-    response = req.post("http://localhost/update_status", json={'temperature': 25})
+    response = req.post("http://192.168.1.65:8080/update_status", json={'temperature': 25})
     print(response)
     print(response.json())
     print(response.status_code)
 
 session = requests.Session()
-now = datetime.datetime.now()
-print('Begin')
-post_test(session)
-print(datetime.datetime.now()-now)
 now = datetime.datetime.now()
 print('Begin')
 post_test(session)
