@@ -16,10 +16,10 @@ while True:
             "Voltage_C4": float(reading[9].decode().replace('\r', '').replace('\n','')),
             "Voltage_Charger": float(reading[11].decode().replace('\r', '').replace('\n','')),
             "Button_Pressed": True if int(reading[13].decode().replace('\r', '').replace('\n','')) == 1 else False,
-            "Raspberry_Connected": reading[15].decode().replace('\r', '').replace('\n',''),
-            "Starting_System": reading[17].decode().replace('\r', '').replace('\n',''),
-            "System_Shut_Down": reading[19].decode().replace('\r', '').replace('\n',''),
-            "Charging": reading[21].decode().replace('\r', '').replace('\n',''),
-            "Fully_Charged": reading[23].decode().replace('\r', '').replace('\n','')  
+            "Raspberry_Connected": True if int(reading[15].decode().replace('\r', '').replace('\n','')) == 1 else False,
+            "Starting_System": True if int(reading[17].decode().replace('\r', '').replace('\n','')) == 1 else False,
+            "System_Shut_Down": True if int(reading[19].decode().replace('\r', '').replace('\n','')) == 1 else False,
+            "Charging": True if int(reading[21].decode().replace('\r', '').replace('\n','')) == 1 else False,
+            "Fully_Charged": True if int(reading[23].decode().replace('\r', '').replace('\n','')) == 1 else False  
             }
     print(data)
