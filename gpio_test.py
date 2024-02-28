@@ -9,4 +9,4 @@ serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.01)
 while True:
   reading = serialport.readlines()
   if reading:
-    print(reading)
+    print(reading[0].decode())
