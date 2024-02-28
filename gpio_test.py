@@ -7,4 +7,6 @@ GPIO.output(12, True)
 serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.01)
 
 while True:
-  print(serialport.readlines())
+  reading = serialport.readlines()
+  if reading != '':
+    print(serialport.readlines())
