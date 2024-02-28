@@ -19,7 +19,8 @@ Thread(target=camera.create_video, args=(camera.buffer, 'Test2')).start()
 
 camera.stop_camera()
 time.sleep(3)
-camera.create_camera()#image_width=640, image_height=480, fps=30)
+camera.create_camera(image_width=1920, image_height=1280, fps=20)
+#amera.create_camera()#image_width=640, image_height=480, fps=30)
 camera.start_camera()
 time.sleep(5)
 
