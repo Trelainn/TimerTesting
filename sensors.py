@@ -1,6 +1,6 @@
 import requests
 import datetime
-#import camera
+import camera
 import time
 from threading import Thread
 
