@@ -40,7 +40,7 @@ def readSerial():
                         "Internet_Available": internet_available, 
                         "LED_Status": led_status
                         }
-                response = requests.post("http://localhost:8080/update_status", json=data)
+                requests.post("http://localhost:8080/update_status", json=data)
                 if data['System_Shut_Down'] == True:
                     print('OFF')
                     os.system('shutdown now')
@@ -70,6 +70,11 @@ def checkInternetConnection():
         #print(response.status_code)
         time.sleep(60)
 
+def updateWifiList():
+    while True:
+        requests.post("http://localhost:8080/update_list_wifi_networks", json=wifi_management.list_wifi_networks())
+        time.sleep(15)
+
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(12, GPIO.OUT)
@@ -79,8 +84,7 @@ if __name__ == "__main__":
     Thread(target=registerInNetwork, args=()).start()
     Thread(target=checkStatus, args=()).start()
     Thread(target=checkInternetConnection, args=()).start()
-    print(wifi_management.list_wifi_networks())
-
+    Thread(target=updateWifiList, args=()).start()
 '''
 
 camera.start_camera()
