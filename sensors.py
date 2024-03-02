@@ -30,7 +30,8 @@ def readSerial():
                         "Charging": True if int(reading[21].decode().replace('\r', '').replace('\n','')) == 1 else False,
                         "Fully_Charged": True if int(reading[23].decode().replace('\r', '').replace('\n','')) == 1 else False  
                         }
-                requests.post("http://localhost:8080/update_status", json=data)
+                response = requests.post("http://localhost:8080/update_status", json=data)
+                print(response)
                 print(data)
             except:
                 print(reading)
