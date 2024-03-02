@@ -5,8 +5,8 @@ import time
 import network_registration
 from threading import Thread
 
-def registerInNetwork(self):
-    self.registration = network_registration()
+def registerInNetwork():
+    registration = network_registration()
 
 if __name__ == "__main__":
     Thread(target=registerInNetwork, args=()).start()
