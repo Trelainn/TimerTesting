@@ -375,6 +375,7 @@ def update_status():
         'insert into system_tracker (date, battery_percentage, temperature, race_status_ race_number, camera_on, antenna_on, pcb_connection, internet_available, led_status, charger_connected, starting_system, system_shut_down) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', 
         (datetime.now(),battery_percentage, temperature, status['race_status'], status['next_race_number'], camera_on, True, pcb_connection, internet_available, led_status, charger_connected, starting_system, system_shut_down)
     )
+    return {'ok': True} 
 
 '''
 @app.route('/environment_variables', methods=['GET'])
