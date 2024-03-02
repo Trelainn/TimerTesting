@@ -390,10 +390,14 @@ def update_status():
     db.commit()
     return {'ok': True} 
 
+@app.route('/update_list_wifi_networks', methods=['POST'])
+def update_list_wifi_networks():
+    global wifi_list
+    wifi_list = request.json()
+    return {'ok': True} 
+
 @app.route('/list_wifi_networks', methods=['GET'])
 def list_wifi_networks():
-    load_wifi()
-    time.sleep(5)
     return wifi_list
 
 @app.route('/connect', methods=['POST'])
