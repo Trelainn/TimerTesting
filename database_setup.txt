@@ -1,0 +1,67 @@
+CREATE TABLE IF NOT EXISTS system_tracker (
+	id BIGSERIAL PRIMARY KEY,
+    date TIMESTAMP,
+	battery_percentage NUMERIC(5,2) NOT NULL,
+	temperature NUMERIC(5,2) NOT NULL,
+	race_status VARCHAR(10),
+	race_number INTEGER NOT NULL,
+    camera_on BOOLEAN NOT NULL,
+    antenna_on BOOLEAN NOT NULL,
+    pcb_connection BOOLEAN NOT NULL,
+    internet_available BOOLEAN NOT NULL,
+    led_status VARCHAR(10)
+);
+
+INSERT INTO system_tracker (date, battery_percentage, temperature, race_status, race_number, camera_on, antenna_on, pcb_connection, internet_available, led_status) VALUES ('2024-01-01 00:00:00', 0, 0, 'no race', 0, FALSE, FALSE, FALSE, FALSE, 'INITIAL');
+
+CREATE TABLE IF NOT EXISTS system_parameters (
+	id VARCHAR(20) PRIMARY KEY,
+    value VARCHAR(100)
+);
+
+INSERT INTO system_parameters (id, value) VALUES ('race_status', 'no race');
+INSERT INTO system_parameters (id, value) VALUES ('race_owner', 'no race');
+INSERT INTO system_parameters (id, value) VALUES ('next_race_number', '1');
+
+
+CREATE TABLE IF NOT EXISTS races (
+	race_number INTEGER NOT NULL PRIMARY KEY,
+    code VARCHAR(4),
+    user_id VARCHAR(100),
+    race_status VARCHAR(20),
+    track VARCHAR(100),
+    race_type VARCHAR(10),
+    limit_number INTEGER,
+    race_begin_time TIMESTAMP,
+    race_final_time TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS race_competitors (
+	race_number INTEGER NOT NULL,
+	tag VARCHAR(10) NOT NULL,
+	nickname VARCHAR(100) NOT NULL,
+	user_id VARCHAR(28),
+	toy VARCHAR(25),
+    gender VARCHAR(25),
+    weight_category VARCHAR(25),
+    photo BOOLEAN, 
+    video_permission BOOLEAN DEFAULT FALSE,
+	FOREIGN KEY (race_number) REFERENCES races (race_number),
+	PRIMARY KEY (race_number, tag)
+);
+
+CREATE TABLE IF NOT EXISTS race_competitors_laps (
+	race_number INTEGER NOT NULL,
+	tag VARCHAR(10) NOT NULL,
+	lap INTEGER NOT NULL,
+	time_milliseconds INTEGER NOT NULL,
+    video_name VARCHAR(20),
+    info_uploaded BOOLEAN DEFAULT FALSE,
+    video_uploaded BOOLEAN DEFAULT FALSE,
+	FOREIGN KEY (race_number) REFERENCES races (race_number),
+	PRIMARY KEY (race_number, tag, lap)
+);
+
+DROP TABLE race_competitors_laps;
+DROP TABLE race_competitors;
+DROP TABLE races;
