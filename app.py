@@ -414,6 +414,7 @@ def create_hotspot():
 
 @app.route('/update_wifi_network', methods=['GET'])
 def update_wifi_network():
+    global wifi_network_change_data
     temp = wifi_network_change_data
     wifi_network_change_data = {'change': False}
     return temp
