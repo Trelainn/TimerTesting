@@ -41,7 +41,7 @@ def readSerial():
                         "LED_Status": led_status
                         }
                 response = requests.post("http://localhost:8080/update_status", json=data)
-                if data['System_Shut_Down']:
+                if data['System_Shut_Down'] == True:
                     print('OFF')
                     os.system('shutdown now')
                 #print(response)
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     Thread(target=checkStatus, args=()).start()
     Thread(target=checkInternetConnection, args=()).start()
     print(wifi_management.list_wifi_networks())
-    
+
 '''
 
 camera.start_camera()
