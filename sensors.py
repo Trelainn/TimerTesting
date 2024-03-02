@@ -80,8 +80,7 @@ if __name__ == "__main__":
     Thread(target=checkStatus, args=()).start()
     Thread(target=checkInternetConnection, args=()).start()
     print(wifi_management.list_wifi_networks())
-    os.system('reboot now')
-
+    
 '''
 
 camera.start_camera()
