@@ -42,6 +42,7 @@ def readSerial():
                         }
                 response = requests.post("http://localhost:8080/update_status", json=data)
                 if data['System_Shut_Down']:
+                    print('OFF')
                     os.system('shutdown now')
                 #print(response)
                 #print(data)
