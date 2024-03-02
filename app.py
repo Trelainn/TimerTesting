@@ -9,7 +9,7 @@ import random
 import time
 
 app = Flask(__name__)
-wifi_list = None
+wifi_list = []
 wifi_network_change_data = {'change': False}
 
 def get_current_status():
