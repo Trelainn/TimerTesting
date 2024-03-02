@@ -7,8 +7,10 @@ from datetime import datetime
 import string
 import random
 import wifi_management
+import time
 
 app = Flask(__name__)
+wifi_list = None
 
 def get_current_status():
     db, c = get_db()
@@ -171,6 +173,11 @@ def get_video_info(race_number, tag, lap, user_id):
         lap_info['info_uploaded'] = lap[5]
         lap_info['video_uploaded'] = lap[6] 
     return lap_info
+
+def load_wifi():
+    global wifi_list
+    wifi_list = wifi_management.list_wifi_networks()
+
 @app.route('/status', methods=['GET'])
 def status():
     return get_current_status()
@@ -385,8 +392,9 @@ def update_status():
 
 @app.route('/list_wifi_networks', methods=['GET'])
 def list_wifi_networks():
-    data = wifi_management.list_wifi_networks()
-    return data
+    load_wifi()
+    time.sleep(5)
+    return wifi_list
 
 @app.route('/connect', methods=['POST'])
 def connect():
