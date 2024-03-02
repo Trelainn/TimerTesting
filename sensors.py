@@ -40,7 +40,7 @@ def readSerial():
                         }
                 response = requests.post("http://localhost:8080/update_status", json=data)
                 print(response)
-                print(data)
+                #print(data)
             except:
                 print(reading)
 
