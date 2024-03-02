@@ -13,6 +13,7 @@ camera.create_camera(image_width=1280, image_height=720, fps=20)
 camera.stop_camera()
 serialport = None
 internet_available = False
+antenna_on = False
 led_status = 'Starting'
 
 def readSerial():
@@ -33,6 +34,7 @@ def readSerial():
                         "Charging": True if int(reading[21].decode().replace('\r', '').replace('\n','')) == 1 else False,
                         "Fully_Charged": True if int(reading[23].decode().replace('\r', '').replace('\n','')) == 1 else False, 
                         "Camera_On": camera.get_camera_on(),
+                        "Antenna_On": antenna_on,
                         "Internet_Available": internet_available, 
                         "LED_Status": led_status
                         }
@@ -60,7 +62,7 @@ def checkInternetConnection():
     while True:
         response = requests.get("https://www.google.com")
         internet_available = True if (response.status_code == 200) else False
-        print(response.status_code)
+        #print(response.status_code)
         time.sleep(60)
 
 if __name__ == "__main__":
