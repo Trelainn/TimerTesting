@@ -5,6 +5,7 @@ import time
 import network_registration
 import RPi.GPIO as GPIO
 import serial
+import wifi_management
 from threading import Thread
 
 status = {'antenna_on': False, 'battery_percentage': 100, 'camera_on': False, 'date': 0, 'id': 0, 'internet_available':False, 'led_status': 'NONE', 'pcb_connection': False, 'race_number':0, 'race_status':'None', 'temperature': 0}
@@ -74,7 +75,7 @@ if __name__ == "__main__":
     Thread(target=registerInNetwork, args=()).start()
     Thread(target=checkStatus, args=()).start()
     Thread(target=checkInternetConnection, args=()).start()
-    
+    print(wifi_management.list_wifi_networks())
 
 '''
 
