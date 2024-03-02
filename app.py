@@ -382,7 +382,8 @@ def update_status():
 
 @app.route('/list_wifi_networks', methods=['GET'])
 def list_wifi_networks():
-    return wifi_management.list_wifi_networks()
+    data = wifi_management.list_wifi_networks()
+    return data
 
 @app.route('/connect', methods=['POST'])
 def connect():
