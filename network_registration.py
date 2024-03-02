@@ -11,7 +11,7 @@ class network_registration:
 
     def __init__(self):
         self.hostname=str(socket.gethostname())
-        self.IPAddress=socket.gethostbyname(hostname+".local")
+        self.IPAddress=socket.gethostbyname(self.hostname+".local")
 
         self.info = ServiceInfo(
             "_seamaze-timer._tcp.local.",
