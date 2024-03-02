@@ -393,7 +393,7 @@ def update_status():
 @app.route('/update_list_wifi_networks', methods=['POST'])
 def update_list_wifi_networks():
     global wifi_list
-    wifi_list = request.json()
+    wifi_list = request.json
     return {'ok': True} 
 
 @app.route('/list_wifi_networks', methods=['GET'])
