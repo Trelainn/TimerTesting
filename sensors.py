@@ -2,9 +2,17 @@ import requests
 import datetime
 import camera
 import time
+import network_registration
 from threading import Thread
 
+def registerInNetwork(self):
+    self.registration = network_registration()
 
+if __name__ == "__main__":
+    Thread(target=registerInNetwork, args=()).start()
+    
+
+'''
 camera = camera.Camera()
 camera.create_camera(image_width=1280, image_height=720, fps=20)
 camera.start_camera()
@@ -33,6 +41,7 @@ print('Finished')
 time.sleep(1)
 
 camera.system_on = False
+'''
 
 '''
 def post_test(req):
