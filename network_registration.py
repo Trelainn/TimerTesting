@@ -14,7 +14,7 @@ class network_registration:
             "_seamaze-timer._tcp.local.",
             "Seamaze"+self.hostname+"._seamaze-timer._tcp.local.",
             addresses=[socket.inet_aton(self.IPAddress)],
-            port=80,
+            port=8080,
             properties={'Version': '1.0', 'Nickname': 'Seamaze Timer 1'},
             server=self.hostname+".local."
         )
