@@ -7,6 +7,7 @@ from threading import Thread
 
 def registerInNetwork():
     registration = network_registration.network_registration()
+    registration.register()
 
 if __name__ == "__main__":
     Thread(target=registerInNetwork, args=()).start()
