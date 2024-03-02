@@ -17,6 +17,7 @@ def hotspot(ssid,password):
 
 def list_wifi_networks():
     scan_results = os.popen("nmcli dev wifi list").read()
+    return scan_results
     scan_results = scan_results.splitlines()
     if scan_results:
         scan_results.pop(0)
