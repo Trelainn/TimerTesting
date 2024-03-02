@@ -56,6 +56,7 @@ def checkStatus():
         time.sleep(1)
 
 def checkInternetConnection():
+    global internet_available
     while True:
         response = requests.get("https://www.google.com")
         internet_available = True if (response.status_code == 200) else False
