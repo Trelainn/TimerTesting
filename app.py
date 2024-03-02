@@ -29,9 +29,9 @@ def get_current_status():
         current_status['pcb_connection'] = system_tracker[8]
         current_status['internet_available'] = system_tracker[9]
         current_status['led_status'] = system_tracker[10]
-        current_status['charger_connected'] = system_tracker[10]
-        current_status['starting_system'] = system_tracker[10]
-        current_status['system_shut_down'] = system_tracker[10]
+        current_status['charger_connected'] = system_tracker[11]
+        current_status['starting_system'] = system_tracker[12]
+        current_status['system_shut_down'] = system_tracker[13]
     return current_status 
 
 def get_system_parameters():
