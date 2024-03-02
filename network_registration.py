@@ -6,13 +6,10 @@ from time import sleep
 from zeroconf import IPVersion, ServiceInfo, Zeroconf
 
 class network_registration:
-     
-    info = None
 
     def __init__(self):
         self.hostname=str(socket.gethostname())
         self.IPAddress=socket.gethostbyname(self.hostname+".local")
-
         self.info = ServiceInfo(
             "_seamaze-timer._tcp.local.",
             "Seamaze"+self.hostname+"._seamaze-timer._tcp.local.",
@@ -21,10 +18,18 @@ class network_registration:
             properties={'Version': '1.0', 'Nickname': 'Seamaze Timer 1'},
             server=self.hostname+".local."
         )
-
         self.zeroconf = Zeroconf(ip_version=IPVersion.All)
         #print("Registration of a service, press Ctrl-C to exit...")
-        self.zeroconf.register_service(self.info)  
+        
+
+    def register(self):
+        self.zeroconf.register_service(self.info)
+        try:
+            while True:
+                sleep(0.1)
+        finally:
+            self.unregister()
+
 
     def unregister(self):
         #print("Unregistering...")
