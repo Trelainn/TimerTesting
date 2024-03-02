@@ -136,6 +136,7 @@ def get_laps_info(race_number, tag, video_permission, user_id):
     competitor_laps_info['laps_amount'] = 0
     competitor_laps_info['laps'] = []
     if competitor_laps is not None:
+        competitor_laps_info['laps_amount'] = len(competitor_laps)
         for competitor_lap in competitor_laps:
             lap = {}
             lap['lap'] = competitor_lap[2]
