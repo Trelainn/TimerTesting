@@ -6,11 +6,11 @@ from pathlib import Path
 from datetime import datetime
 import string
 import random
-import wifi_management
 import time
 
 app = Flask(__name__)
 wifi_list = None
+wifi_network_change_data = {'change': False}
 
 def get_current_status():
     db, c = get_db()
@@ -398,17 +398,25 @@ def update_list_wifi_networks():
 
 @app.route('/list_wifi_networks', methods=['GET'])
 def list_wifi_networks():
-    return wifi_list
+    if wifi_list:
+        return wifi_list
+    return None
 
-@app.route('/connect', methods=['POST'])
-def connect():
-    wifi_management.connect(request.json['SSID'], request.json['Password'])
+@app.route('/connect_wifi_network', methods=['POST'])
+def connect_wifi_network():
+    global wifi_network_change_data
+    wifi_network_change_data = {'change': True, 'SSID': request.json['SSID'], 'Password': request.json['Password'], 'Hotspot': False}
     return {'ok:': True}
 
-@app.route('/hotspot', methods=['POST'])
-def hotspot():
-    wifi_management.hotspot(request.json['SSID'], request.json['Password'])
+@app.route('/create_hotspot', methods=['POST'])
+def create_hotspot():
+    global wifi_network_change_data
+    wifi_network_change_data = {'change': True, 'SSID': request.json['SSID'], 'Password': request.json['Password'], 'Hotspot': True}
     return {'ok:': True}
+
+@app.route('/update_wifi_network', methods=['GET'])
+def update_wifi_network():
+    return wifi_network_change_data
 
 '''
 @app.route('/environment_variables', methods=['GET'])
