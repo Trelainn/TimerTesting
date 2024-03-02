@@ -16,7 +16,7 @@ def hotspot(ssid,password):
 	os.system("nmcli dev wifi hotspot ssid {ssid} password {password}")
 
 def list_wifi_networks():
-    scan_results = os.popen("nmcli dev wifi list").read()
+    scan_results = os.popen("sudo nmcli dev wifi list").read()
     scan_results
     scan_results = scan_results.splitlines()
     if scan_results:
