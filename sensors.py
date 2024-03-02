@@ -11,7 +11,7 @@ def registerInNetwork():
 def checkStatus():
     while True:
         response = requests.get('http://localhost:8080/status')
-        print(response)
+        print(response.json())
         time.sleep(1)
 
 if __name__ == "__main__":
