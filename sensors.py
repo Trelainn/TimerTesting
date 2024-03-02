@@ -8,8 +8,15 @@ from threading import Thread
 def registerInNetwork():
     network_registration.network_registration().register()
 
+def checkStatus():
+    while True:
+        response = requests.get('http://localhost:8080/status')
+        print(response)
+        time.sleep(1)
+
 if __name__ == "__main__":
     Thread(target=registerInNetwork, args=()).start()
+    Thread(target=checkStatus, args=()).start()
     
 
 '''
