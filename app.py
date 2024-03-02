@@ -322,7 +322,7 @@ def record_time(tag, time):
             else:
                 lap_number = 1
             if video_permission:
-                video_name = str(status['current_race_number'])+'_'+tag+'_'+lap_number
+                video_name = str(status['current_race_number'])+'_'+str(tag)+'_'+str(lap_number)
             else:
                 video_name = ''
             c.execute('insert into race_competitors_laps (race_number, tag, lap, time_milliseconds) values (%s, %s, %s, %s)', (status['current_race_number'], tag, lap_number, time))
