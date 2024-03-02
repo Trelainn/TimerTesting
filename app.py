@@ -398,9 +398,7 @@ def update_list_wifi_networks():
 
 @app.route('/list_wifi_networks', methods=['GET'])
 def list_wifi_networks():
-    if wifi_list:
-        return wifi_list
-    return None
+    return wifi_list
 
 @app.route('/connect_wifi_network', methods=['POST'])
 def connect_wifi_network():
