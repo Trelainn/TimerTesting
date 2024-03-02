@@ -369,11 +369,12 @@ def update_status():
     system_shut_down = request.json['System_Shut_Down']
     charger_connected = request.json['Charging']
     camera_on = request.json['Camera_On']
+    antenna_on = request.json['Antenna_On']
     internet_available = request.json['Internet_Available']
     led_status = request.json['LED_Status']
     c.execute(
-        'insert into system_tracker (date, battery_percentage, temperature, race_status, race_number, camera_on, antenna_on, pcb_connection, internet_available, led_status, charger_connected, starting_system, system_shut_down) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', 
-        (datetime.now(),battery_percentage, temperature, status['race_status'], status['next_race_number'], camera_on, True, pcb_connection, internet_available, led_status, charger_connected, starting_system, system_shut_down)
+        'insert into system_tracker (date, battery_percentage, temperature, race_status, race_number, camera_on, antenna_on, pcb_connection, internet_available, led_status, charger_connected, starting_system, system_shut_down) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', 
+        (datetime.now(),battery_percentage, temperature, status['race_status'], status['next_race_number'], camera_on, antenna_on, pcb_connection, internet_available, led_status, charger_connected, starting_system, system_shut_down)
     )
     return {'ok': True} 
 
