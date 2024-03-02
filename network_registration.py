@@ -18,7 +18,7 @@ class network_registration:
             properties={'Version': '1.0', 'Nickname': 'Seamaze Timer 1'},
             server=self.hostname+".local."
         )
-        self.zeroconf = Zeroconf(ip_version=IPVersion.All, apple_p2p=True)
+        self.zeroconf = Zeroconf(ip_version=IPVersion.All)
         #print("Registration of a service, press Ctrl-C to exit...")
         
 
