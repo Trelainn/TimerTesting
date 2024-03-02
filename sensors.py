@@ -38,7 +38,7 @@ def registerInNetwork():
 
 def checkStatus():
     while True:
-        response = requests.get('localhost:8080/status')
+        response = requests.get('http://localhost:8080/status')
         status['camera_on'] = response.json()['camera_on']
         if camera.get_camera_on() == False and status['camera_on'] == True:
             camera.start_camera()
