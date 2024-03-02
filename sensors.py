@@ -6,6 +6,7 @@ import network_registration
 import RPi.GPIO as GPIO
 import serial
 import wifi_management
+import os
 from threading import Thread
 
 status = {'antenna_on': False, 'battery_percentage': 100, 'camera_on': False, 'date': 0, 'id': 0, 'internet_available':False, 'led_status': 'NONE', 'pcb_connection': False, 'race_number':0, 'race_status':'None', 'temperature': 0}
@@ -40,7 +41,9 @@ def readSerial():
                         "LED_Status": led_status
                         }
                 response = requests.post("http://localhost:8080/update_status", json=data)
-                print(response)
+                if data['System_Shut_Down']:
+                    os.system('shutdown now')
+                #print(response)
                 #print(data)
             except:
                 print(reading)
