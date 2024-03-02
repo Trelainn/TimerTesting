@@ -360,7 +360,21 @@ def profile_picture(race_number, tag, code):
 
 @app.route('/update_status', methods=['POST'])
 def update_status():
-    pass
+    db, c = get_db()
+    status = get_system_parameters()
+    temperature = request.json['Temperature']
+    battery_percentage = request.json['Voltage_C1'] + request.json['Voltage_C2'] + request.json['Voltage_C3'] + request.json['Voltage_C4']
+    pcb_connection = request.json['Raspberry_Connected']
+    starting_system = request.json['Starting_System']
+    system_shut_down = request.json['System_Shut_Down']
+    charger_connected = request.json['Charging']
+    camera_on = request.json['Camera_On']
+    internet_available = request.json['Internet_Available']
+    led_status = request.json['LED_Status']
+    c.execute(
+        'insert into system_tracker (date, battery_percentage, temperature, race_status_ race_number, camera_on, antenna_on, pcb_connection, internet_available, led_status, charger_connected, starting_system, system_shut_down) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', 
+        (datetime.now(),battery_percentage, temperature, status['race_status'], status['next_race_number'], camera_on, True, pcb_connection, internet_available, led_status, charger_connected, starting_system, system_shut_down)
+    )
 
 '''
 @app.route('/environment_variables', methods=['GET'])
