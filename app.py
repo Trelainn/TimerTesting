@@ -306,13 +306,14 @@ def start_race():
         return {'ok': False, 'process': 'Start Race', 'status': 'failed'}
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
+
 @app.route('/record_time/<tag>/<time>', methods=['POST'])
 def record_time(tag, time):
     status = get_system_parameters()
     try:
         if status['race_status'] == 'racing':
             db, c = get_db()
-            c.execute('select lap from times where tag = %s and race_number = %s order by lap desc', (tag, status['current_race_number']))
+            c.execute('select lap from race_competitors_laps where tag = %s and race_number = %s order by lap desc', (tag, status['current_race_number']))
             lap_number = c.fetchone()
             c.execute('select video_permission from race_competitors where tag = %s and race_number = %s', (tag, status['current_race_number']))
             video_permission = c.fetchone()[0]
@@ -322,7 +323,7 @@ def record_time(tag, time):
                 lap_number = 1
             if video_permission:
                 video_name = str(status['current_race_number'])+'_'+tag+'_'+lap_number
-            c.execute('insert into times (race_number, tag, lap, time_milliseconds) values (%s, %s, %s, %s)', (status['current_race_number'], tag, lap_number, time))
+            c.execute('insert into race_competitors_laps (race_number, tag, lap, time_milliseconds) values (%s, %s, %s, %s)', (status['current_race_number'], tag, lap_number, time))
             db.commit()
             return {'ok': True, 'process': 'Record Time', 'status': 'success', 'race_number': status['current_race_number'], 'tag': tag, 'lap_number': lap_number, 'time':time, 'video_name': video_name, 'video_permission': video_permission}
         return {'ok': False, 'process': 'Record Time', 'status': 'failed'}
@@ -345,6 +346,7 @@ def stop_race():
         return {'ok': False, 'process': 'Stop Race', 'status': 'failed'}
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
+
 @app.route('/view_race', methods=['POST'])
 def view_race():
     user_id = request.json['user_id']
@@ -356,6 +358,7 @@ def view_race():
         return get_race_info(race_number=race_number, user_id=user_id)
     else:
         pass
+
 @app.route('/video/', methods=['POST'])
 def video(race_number, tag, lap, user_id):
     video_info = get_video_info(race_number=race_number, tag=tag, lap=lap, user_id=user_id)
@@ -365,6 +368,7 @@ def video(race_number, tag, lap, user_id):
         if video_info['video_uploaded']:
             return Response("Server available", status=400,)
         return Response("No video available", status=403,)
+
 @app.route('/profile_picture/', methods=['POST'])
 def profile_picture(race_number, tag, code):
 	return send_file('/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'+str(race_number)+'_'+str(tag)+'_'+str(code)+'.jpeg', as_attachment=True)

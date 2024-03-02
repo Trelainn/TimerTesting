@@ -75,6 +75,7 @@ def checkInternetConnection():
         time.sleep(60)
 
 def updateWifiList():
+    global register_in_network
     while True:
         change_wifi_newtwork = requests.get('http://localhost:8080/update_wifi_network').json()
         if change_wifi_newtwork['change'] == True:
@@ -84,6 +85,7 @@ def updateWifiList():
                 wifi_management.hotspot(ssid, password)
             else:
                 wifi_management.connect(ssid, password)
+            register_in_network.stop()
             register_in_network = Thread(target=registerInNetwork, args=()).start()
         requests.post("http://localhost:8080/update_list_wifi_networks", json=wifi_management.list_wifi_networks())
         time.sleep(15)
