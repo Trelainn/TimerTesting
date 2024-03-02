@@ -56,3 +56,6 @@ class Camera:
         self.camera_working = False
         self.buffer = []
         Thread(target=self.run_camera, args=()).start()
+
+    def get_camera_on(self):
+        return self.system_on
