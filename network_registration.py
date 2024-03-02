@@ -27,6 +27,8 @@ class network_registration:
         try:
             while True:
                 sleep(0.1)
+        except:
+            pass
         finally:
             self.unregister()
 
