@@ -10,6 +10,7 @@ from threading import Thread
 status = {'antenna_on': False, 'battery_percentage': 100, 'camera_on': False, 'date': 0, 'id': 0, 'internet_available':False, 'led_status': 'NONE', 'pcb_connection': False, 'race_number':0, 'race_status':'None', 'temperature': 0}
 camera = camera.Camera()
 camera.create_camera(image_width=1280, image_height=720, fps=20)
+camera.stop_camera()
 serialport = None
 internet_available = False
 led_status = 'Starting'
@@ -55,8 +56,11 @@ def checkStatus():
         time.sleep(1)
 
 def checkInternetConnection():
-    response = requests.get("https://www.google.com")
-    internet_available = True if (response.status_code == 200) else False
+    while True:
+        response = requests.get("https://www.google.com")
+        internet_available = True if (response.status_code == 200) else False
+        print(response.status_code)
+        time.sleep(60)
 
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BOARD)
