@@ -20,7 +20,7 @@ def get_current_status():
         current_status['id'] = system_tracker[0]
         current_status['date'] = system_tracker[1]
         current_status['battery_percentage'] = system_tracker[2]
-        current_status['temperatrue'] = system_tracker[3]
+        current_status['temperature'] = system_tracker[3]
         current_status['race_status'] = system_tracker[4]
         current_status['race_number'] = system_tracker[5]
         current_status['camera_on'] = system_tracker[6]
