@@ -17,6 +17,7 @@ serialport = None
 internet_available = False
 antenna_on = False
 led_status = 'Starting'
+register_in_network = None
 
 def readSerial():
     while True:
@@ -65,8 +66,11 @@ def checkStatus():
 def checkInternetConnection():
     global internet_available
     while True:
-        response = requests.get("https://www.google.com")
-        internet_available = True if (response.status_code == 200) else False
+        try:
+            response = requests.get("https://www.google.com")
+            internet_available = True if (response.status_code == 200) else False
+        except:
+            pass
         #print(response.status_code)
         time.sleep(60)
 
@@ -80,6 +84,7 @@ def updateWifiList():
                 wifi_management.hotspot(ssid, password)
             else:
                 wifi_management.connect(ssid, password)
+            register_in_network = Thread(target=registerInNetwork, args=()).start()
         requests.post("http://localhost:8080/update_list_wifi_networks", json=wifi_management.list_wifi_networks())
         time.sleep(15)
 
@@ -89,7 +94,7 @@ if __name__ == "__main__":
     GPIO.output(12, True)
     serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.5)
     Thread(target=readSerial, args=()).start()
-    Thread(target=registerInNetwork, args=()).start()
+    register_in_network = Thread(target=registerInNetwork, args=()).start()
     Thread(target=checkStatus, args=()).start()
     Thread(target=checkInternetConnection, args=()).start()
     Thread(target=updateWifiList, args=()).start()
