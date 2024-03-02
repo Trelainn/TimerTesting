@@ -72,6 +72,14 @@ def checkInternetConnection():
 
 def updateWifiList():
     while True:
+        change_wifi_newtwork = requests.get('http://localhost:8080/update_wifi_network').json()
+        if change_wifi_newtwork['change'] == True:
+            ssid = change_wifi_newtwork['SSID']
+            password = change_wifi_newtwork['Password']
+            if change_wifi_newtwork['Hotspot'] == True:
+                wifi_management.hotspot(ssid, password)
+            else:
+                wifi_management.connect(ssid, password)
         requests.post("http://localhost:8080/update_list_wifi_networks", json=wifi_management.list_wifi_networks())
         time.sleep(15)
 
