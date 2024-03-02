@@ -11,6 +11,8 @@ status = {'antenna_on': False, 'battery_percentage': 100, 'camera_on': False, 'd
 camera = camera.Camera()
 camera.create_camera(image_width=1280, image_height=720, fps=20)
 serialport = None
+internet_available = False
+led_status = 'Starting'
 
 def readSerial():
     while True:
@@ -28,7 +30,10 @@ def readSerial():
                         "Starting_System": True if int(reading[17].decode().replace('\r', '').replace('\n','')) == 1 else False,
                         "System_Shut_Down": True if int(reading[19].decode().replace('\r', '').replace('\n','')) == 1 else False,
                         "Charging": True if int(reading[21].decode().replace('\r', '').replace('\n','')) == 1 else False,
-                        "Fully_Charged": True if int(reading[23].decode().replace('\r', '').replace('\n','')) == 1 else False  
+                        "Fully_Charged": True if int(reading[23].decode().replace('\r', '').replace('\n','')) == 1 else False, 
+                        "Camera_On": camera.get_camera_on(),
+                        "Internet_Available": internet_available, 
+                        "LED_Status": led_status
                         }
                 response = requests.post("http://localhost:8080/update_status", json=data)
                 print(response)
@@ -49,6 +54,10 @@ def checkStatus():
             camera.stop_camera()
         time.sleep(1)
 
+def checkInternetConnection():
+    response = requests.get("https://www.google.com")
+    internet_available = True if (response.status_code == 200) else False
+
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(12, GPIO.OUT)
@@ -57,6 +66,7 @@ if __name__ == "__main__":
     Thread(target=readSerial, args=()).start()
     Thread(target=registerInNetwork, args=()).start()
     Thread(target=checkStatus, args=()).start()
+    Thread(target=checkInternetConnection, args=()).start()
     
 
 '''
