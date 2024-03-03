@@ -362,6 +362,22 @@ def view_race():
     else:
         pass
 
+@app.route('/view_participants', methods=['GET'])
+def view_participants():
+    db, c = get_db()
+    status = get_system_parameters()
+    try:
+        if status['race_status'] == 'racing':
+            c.execute('select tag from race_competitors where race_number = %s', (status['current_race_number'], ))
+            race_competitors = c.fetchall()
+            participants = []
+            for competitor in race_competitors:
+                participants.append(competitor[0])
+    except:
+        pass
+    return participants
+
+
 @app.route('/video/', methods=['POST'])
 def video(race_number, tag, lap, user_id):
     video_info = get_video_info(race_number=race_number, tag=tag, lap=lap, user_id=user_id)
