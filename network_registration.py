@@ -12,7 +12,7 @@ class network_registration:
         self.IPAddress=socket.gethostbyname(self.hostname+".local")
         self.info = ServiceInfo(
             "_seamaze-timer._tcp.local.",
-            "Seamaze"+self.hostname+"._seamaze-timer._tcp.local.",
+            self.hostname+"._seamaze-timer._tcp.local.",
             addresses=[socket.inet_aton(self.IPAddress)],
             port=8080,
             properties={'Version': '1.0', 'Nickname': 'Seamaze Timer 1'},
