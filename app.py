@@ -358,7 +358,7 @@ def record_time():
             return {'ok': True, 'process': 'Record Time', 'status': 'success', 'race_number': status['current_race_number'], 'tag': tag, 'lap_number': lap_number, 'time':time, 'video_name': video_name, 'video_permission': video_permission}
         return {'ok': False, 'process': 'Record Time', 'status': 'failed'}
     except Exception as e: 
-        return {'ok': False, "error": str(e)}     
+        return {'ok': False, "error": str(e), "participant": participant}     
 
 @app.route('/stop_race', methods=['POST'])
 def stop_race():
