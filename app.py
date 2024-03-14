@@ -341,6 +341,8 @@ def record_time():
             participant = c.fetchall()
             if participant is not None:
                 video_permission = participant[0][1]
+            else:
+                return {'ok': False, "error": "tag not registered in race"} 
             c.execute('select lap from race_competitors_laps where tag = %s and race_number = %s order by lap desc', (tag, status['current_race_number']))
             lap_number = c.fetchone()
             if lap_number is not None:
