@@ -339,7 +339,6 @@ def record_time():
             db, c = get_db()
             c.execute('select tag, video_permission from race_competitors where tag = %s and race_number = %s', (tag, status['current_race_number']))
             participant = c.fetchall()
-            return participant 
             if participant is not None:
                 video_permission = c.fetchone()[1]
             c.execute('select lap from race_competitors_laps where tag = %s and race_number = %s order by lap desc', (tag, status['current_race_number']))
