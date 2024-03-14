@@ -329,8 +329,10 @@ def start_race():
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
 
-@app.route('/record_time/<tag>/<time>', methods=['POST'])
-def record_time(tag, time):
+@app.route('/record_time/', methods=['POST'])
+def record_time():
+    tag = request.json['tag']
+    time = request.json['time']
     status = get_system_parameters()
     try:
         if status['race_status'] == 'racing':
@@ -371,7 +373,7 @@ def stop_race():
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
 
-@app.route('/view_race', methods=['POST'])
+@app.route('/view_race', methods=['GET'])
 def view_race():
     user_id = request.json['user_id']
     race_number = request.json['race_number']
