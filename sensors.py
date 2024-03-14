@@ -103,7 +103,7 @@ def readRFID():
                 tag = reading[0].decode().split('\n')[0]
                 if tag == 'CONNECTED':
                     status['antenna_on'] = True
-                tag_read = tag
+                tag_read = tag[2:]
                 time_now = datetime.datetime.now()
                 try:
                     if tag in times:
