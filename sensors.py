@@ -102,7 +102,7 @@ def readRFID():
             if reading:
                 tag = reading[0].decode().split('\n')[0]
                 print(tag)
-                time_now = datetime.datetime.now()
+                time_now = datetime.datetime.now().seconds
                 try:
                     if tag in times:
                         last_time = times[tag]
