@@ -96,7 +96,7 @@ def get_race_info(race_number, code, user_id):
         c.execute('select tag from race_competitors where race_number = %s', (race_number, ))
         race_competitors = c.fetchall()
         for competitor in race_competitors:
-            race_info['race_competitors'].append(get_competitor_info(race_number=race_number, tag=competitor[0], user_id=user_id))
+            race_info['race_competitors'].append(get_competitor_info(race_number=race_number, user_id=user_id))
         race_info['race_competitors_amount'] = len(race_info['race_competitors'])
     return race_info
 
