@@ -110,7 +110,7 @@ def readRFID():
                 try:
                     if tag in times:
                         last_time = times[tag]
-                        time_recorded = (time_now - last_time).microseconds/1000 + (time_now - last_time).seconds * 1000
+                        time_recorded = int((time_now - last_time).microseconds/1000 + (time_now - last_time).seconds * 1000)
                         if time_recorded > (lap_threshold * 1000):
                             times[tag] = time_now
                             Thread(target=saveLapTime, args=(tag_read, time_recorded, camera.buffer)).start()
