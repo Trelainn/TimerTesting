@@ -410,7 +410,7 @@ def video(race_number, tag, lap, user_id):
 
 @app.route('/profile_picture/<race_number>/<tag>', methods=['GET'])
 def profile_picture(race_number, tag):
-	return send_file('/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'+str(race_number)+'_'+str(tag)'.jpeg', as_attachment=True)
+	return send_file('/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'+str(race_number)+'_'+str(tag)+'.jpeg', as_attachment=True, download_name=str(race_number))
 
 @app.route('/update_status', methods=['POST'])
 def update_status():
