@@ -411,7 +411,7 @@ def video(race_number, tag, lap, user_id):
 @app.route('/profile_picture/<race_number>/<tag>', methods=['GET'])
 def profile_picture(race_number, tag):
     path = '/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'
-    name = str(race_number) + '_' + str(tag)+'.*'
+    name = str(race_number) + '_' + str(tag)
     files = []
     for file in os.listdir(path):
         files.append(file)
