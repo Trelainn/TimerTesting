@@ -15,7 +15,6 @@ class Camera:
     def create_video(self, images, video_name):
         if images:
             try:
-                print("video!")
                 #now = datetime.now()
                 frame = images[0]
                 height, width, layers = frame.shape
