@@ -56,6 +56,7 @@ def registerInNetwork():
     network_registration.network_registration().register()
 
 def checkStatus():
+    global times
     while True:
         response = requests.get('http://localhost:8080/system_parameters')
         status['race_status'] = response.json()['race_status']
@@ -65,6 +66,7 @@ def checkStatus():
         else:
             if camera.get_camera_on() == True:
                 camera.stop_camera()
+                times = {}
         time.sleep(1)
 
 def checkInternetConnection():
