@@ -339,7 +339,7 @@ def record_time():
             db, c = get_db()
             c.execute('select tag, video_permission from race_competitors where tag = %s and race_number = %s', (tag, status['current_race_number']))
             participant = c.fetchall()
-            if participant is not None:
+            if participant == []:
                 video_permission = participant[0][1]
             else:
                 return {'ok': False, "error": "tag not registered in race"} 
