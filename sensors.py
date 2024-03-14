@@ -55,13 +55,14 @@ def registerInNetwork():
 
 def checkStatus():
     while True:
-        response = requests.get('http://localhost:8080/status')
-        status['camera_on'] = response.json()['camera_on']
-        if camera.get_camera_on() == False and status['camera_on'] == True:
-            camera.start_camera()
-        if camera.get_camera_on() == True and status['camera_on'] == False:
-            camera.stop_camera()
+        response = requests.get('http://localhost:8080/system_parameters')
         status['race_status'] = response.json()['race_status']
+        if status['race_status'] == 'racing':
+            if camera.get_camera_on() == False:
+                camera.start_camera()
+        else:
+            if camera.get_camera_on() == True:
+                camera.stop_camera()
         time.sleep(1)
 
 def checkInternetConnection():
