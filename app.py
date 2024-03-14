@@ -4,6 +4,7 @@ from multiprocessing import Manager
 from os import environ 
 from pathlib import Path
 from datetime import datetime
+from werkzeug.utils import secure_filename
 import string
 import random
 import time
@@ -11,6 +12,7 @@ import time
 app = Flask(__name__)
 wifi_list = []
 wifi_network_change_data = {'change': False}
+picture_extensions = {'png', 'jpg', 'jpeg'}
 
 def get_current_status():
     db, c = get_db()
@@ -175,6 +177,10 @@ def get_video_info(race_number, tag, lap, user_id):
         lap_info['video_uploaded'] = lap[6] 
     return lap_info
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in picture_extensions
+
 @app.route('/status', methods=['GET'])
 def status():
     return get_current_status()
@@ -285,21 +291,23 @@ def participant_photo(user_id):
     competitor = get_competitor_info(status['current_race_number'], user_id)
     try:
         if status['race_status'] == 'configure_race':
-            image = request.files['image']
-            error_image = None
             if competitor['photo']:
-                try:
-                    image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(competitor['tag'])+'_'+str(status['race_code'])+'.jpeg')
-                    return {'ok': True}
-                except Exception as e:
-                    error_image = e
-                    return {'ok': False, 'error': 'The file could not be saved due to the following error: '+str(e)}
+                if 'image' not in request.files:
+                    return {'ok': False, 'error': 'Wrong request'}
+                image = request.files['image']
+                if image.filename == '':
+                    return {'ok': False, 'error': 'Empty file'}
+                if image and allowed_file(image.filename):
+                    try:
+                        image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(competitor['tag'])+'_'+str(status['race_code'])+'.jpeg')
+                        return {'ok': True}
+                    except Exception as e:
+                        return {'ok': False, 'error': 'The file could not be saved due to the following error: '+str(e)}
             return {'ok': False, 'error': 'No photo allowed for this user'}
         else:
-            return {'ok': False, 'process': 'Add Participant', 'status': 'failed'}
+            return {'ok': False, 'error': 'Not configure_race', 'status': 'failed'}
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
-
 
 @app.route('/start_race', methods=['POST'])
 def start_race():
