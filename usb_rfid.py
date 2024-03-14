@@ -9,6 +9,7 @@ class Serial_communication:
             reading = serialport.readlines()
             if reading:
                 tag = reading[0].decode().split('\n')[0]
+                print(tag)
 
 
 
