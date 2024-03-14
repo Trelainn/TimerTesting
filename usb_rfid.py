@@ -10,3 +10,7 @@ class Serial_communication:
             if reading:
                 tag = reading[0].decode().split('\n')[0]
 
+
+
+serialtest = Serial_communication()
+serialtest.run()
