@@ -2,7 +2,7 @@ import serial
 
 class Serial_communication:
     
-    def run():
+    def run(self):
         #serialport = serial.Serial("/dev/ttyACM0", 9600, timeout=0.01)
         serialport = serial.Serial("/dev/ttyUSB0", 9600, timeout=0.01)
         while True:
