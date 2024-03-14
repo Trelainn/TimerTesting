@@ -417,7 +417,7 @@ def profile_picture(race_number, tag):
         files.append(file)
         if file.startswith(name):
             image = os.path.join(path, file)
-            extension = image.filename.rsplit('.', 1)[1].lower()
+            extension = image.rsplit('.', 1)[1].lower()
             return send_file(image, as_attachment=True, download_name=str(race_number)+'.'+extension)
     return {'ok': False, 'files': file, 'name': name}
 @app.route('/update_status', methods=['POST'])
