@@ -102,11 +102,11 @@ def readRFID():
             if reading:
                 tag = reading[0].decode().split('\n')[0]
                 print(tag)
-                time_now = datetime.datetime.now().seconds
+                time_now = datetime.datetime.now()
                 try:
                     if tag in times:
                         last_time = times[tag]
-                        time_recorded = time_now - last_time
+                        time_recorded = (time_now - last_time).seconds
                         if time_recorded > lap_threshold:
                             times[tag] = time_now
                             Thread(target=saveLapTime, args=(tag, time_recorded)).start()
