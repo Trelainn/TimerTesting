@@ -110,7 +110,7 @@ def readRFID():
                 try:
                     if tag in times:
                         last_time = times[tag]
-                        time_recorded = (time_now - last_time).microseconds/1000000+(time_now - last_time).seconds*1000
+                        time_recorded = (time_now - last_time).microseconds/1000000 + (time_now - last_time).seconds
                         print(time_recorded)
                         if time_recorded > lap_threshold:
                             times[tag] = time_now
