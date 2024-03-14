@@ -19,7 +19,7 @@ antenna_on = False
 led_status = 'Starting'
 register_in_network = None
 times = {}
-lap_threshold = 20
+lap_threshold = 5
 
 def readSerial():
     while True:
@@ -122,6 +122,7 @@ def readRFID():
 def saveLapTime(tag, time_recorded):
     print(tag)
     print(time_recorded)
+    print("http://localhost:8080/record_time/"+str(tag)+"/"+str(time_recorded))
     response=requests.post("http://localhost:8080/record_time/"+str(tag)+"/"+str(time_recorded))
     print(response.json())
 
