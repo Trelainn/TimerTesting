@@ -100,7 +100,7 @@ def readRFID():
         if status['race_status'] == 'racing':
             reading = serialport.readlines()
             if reading:
-                tag = reading[0].decode().split('\n')[0]
+                tag = reading[0].decode().split('\r')[0]
                 if tag == 'CONNECTED':
                     status['antenna_on'] = True
                 tag_read = tag[2:]
