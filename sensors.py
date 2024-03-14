@@ -120,6 +120,7 @@ def readRFID():
             time.sleep(1)
 
 def saveLapTime(tag, time_recorded):
+    print({'tag': str(tag), 'time': str(time_recorded)})
     response=requests.post("http://localhost:8080/record_time/", json={'tag': str(tag), 'time': str(time_recorded)})
     print(response.json())
 
