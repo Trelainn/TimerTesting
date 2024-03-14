@@ -337,14 +337,12 @@ def record_time():
     try:
         if status['race_status'] == 'racing':
             db, c = get_db()
+            c.execute('select tag, video_permission from race_competitors where tag = %s and race_number = %s', (tag, status['current_race_number']))
+            participant = c.fetchone()
+            if participant is not None:
+                video_permission = c.fetchone()[0]
             c.execute('select lap from race_competitors_laps where tag = %s and race_number = %s order by lap desc', (tag, status['current_race_number']))
             lap_number = c.fetchone()
-            c.execute('select video_permission from race_competitors where tag = %s and race_number = %s', (tag, status['current_race_number']))
-            video_permission = c.fetchone()
-            if video_permission is not None:
-                video_permission = video_permission[0]
-            else: 
-                video_permission = False
             if lap_number is not None:
                 lap_number = int(lap_number[0])+ 1
             else:
