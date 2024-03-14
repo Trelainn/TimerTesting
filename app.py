@@ -100,27 +100,27 @@ def get_race_info(race_number, code, user_id):
         race_info['race_competitors_amount'] = len(race_info['race_competitors'])
     return race_info
 
-def get_competitor_info(race_number, tag, user_id):
+def get_competitor_info(race_number, user_id):
     db, c = get_db()
-    c.execute('select * from race_competitors where race_number = %s and tag = %s', (race_number, tag))
+    c.execute('select * from race_competitors where race_number = %s and user_id = %s', (race_number, user_id))
     competitor = c.fetchone()
     competitor_info = {}
     competitor_info['race_number'] = race_number
-    competitor_info['tag'] = tag
+    competitor_info['user_id'] = user_id
     if competitor is not None:
+        competitor_info['tag'] = competitor[1]
         competitor_info['nickname'] = competitor[2]
-        competitor_info['user_id'] = competitor[3]
         competitor_info['toy'] = competitor[4]
         competitor_info['gender'] = competitor[5]
         competitor_info['weight_category'] = competitor[6]
         competitor_info['photo'] = competitor[7]
         if competitor_info['photo']:
-            competitor_info['photo_url'] = url_for('profile_picture', race_number=race_number, tag=tag)
+            competitor_info['photo_url'] = url_for('profile_picture', race_number=race_number, tag=competitor_info['tag'])
         competitor_info['video_permission'] = competitor[8]
         if competitor_info['video_permission'] and competitor_info['user_id'] == user_id:
-            competitor_info['laps'] = get_laps_info(race_number, tag, True, user_id)
+            competitor_info['laps'] = get_laps_info(race_number, competitor_info['tag'], True, user_id)
         else:
-            competitor_info['laps'] = get_laps_info(race_number, tag, False, user_id)
+            competitor_info['laps'] = get_laps_info(race_number, competitor_info['tag'], False, user_id)
     return competitor_info
 
 def get_laps_info(race_number, tag, video_permission, user_id):
@@ -175,10 +175,6 @@ def get_video_info(race_number, tag, lap, user_id):
         lap_info['video_uploaded'] = lap[6] 
     return lap_info
 
-def load_wifi():
-    global wifi_list
-    wifi_list = wifi_management.list_wifi_networks()
-
 @app.route('/status', methods=['GET'])
 def status():
     return get_current_status()
@@ -208,7 +204,7 @@ def create_race():
 			)
             update_system_parameters(race_number=race_number+1, race_status=race_status, user_id=user_id, code=race_code)
             db.commit()
-            return {'ok': True, 'process': 'Start race', 'status': 'success'}
+            return {'ok': True, 'process': 'Start race', 'status': 'success', 'race_number': race_number}
         else:
             return {'ok': False, 'process': 'Start race', 'status': 'failed', 'error': 'race already created'}
     except Exception as e: 
@@ -248,20 +244,19 @@ def race_type():
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
     
-@app.route('/add_participant', methods=['POST'])
-def add_participant():
+@app.route('/participant', methods=['POST'])
+def participant():
     status = get_system_parameters()
     try:
         if status['race_status'] == 'configure_race':
-            user_id = request.form['user_id']
-            nickname = request.form['nickname']
-            gender = request.form['gender']
-            weight_category = request.form['weight_category']
-            toy = request.form['toy']
-            tag = request.form['tag']
-            video_permission = request.form['video_permission']
-            photo = request.form['photo']
-            image = request.files['image']
+            user_id = request.json['user_id']
+            nickname = request.json['nickname']
+            gender = request.json['gender']
+            weight_category = request.json['weight_category']
+            toy = request.json['toy']
+            tag = request.json['tag']
+            video_permission = request.json['video_permission']
+            photo = request.json['photo']
             error_image = None
             if photo:
                 try:
@@ -290,6 +285,28 @@ def add_participant():
             return {'ok': False, 'process': 'Add Participant', 'status': 'failed'}
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
+
+@app.route('/particpant_photo/<user_id>', methods=['POST'])
+def particpant_photo(user_id):
+    status = get_system_parameters()
+    competitor = get_competitor_info(status['current_race_number'], user_id)
+    try:
+        if status['race_status'] == 'configure_race':
+            image = request.files['image']
+            error_image = None
+            if competitor['photo']:
+                try:
+                    image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(competitor['tag'])+'_'+str(status['race_code'])+'.jpeg')
+                    return {'ok': True}
+                except Exception as e:
+                    error_image = e
+                    return {'ok': False, 'error': 'The file could not be saved due to the following error: '+str(e)}
+            return {'ok': False, 'error': 'No photo allowed for this user'}
+        else:
+            return {'ok': False, 'process': 'Add Participant', 'status': 'failed'}
+    except Exception as e: 
+        return {'ok': False, "error": str(e)}     
+
 
 @app.route('/start_race', methods=['POST'])
 def start_race():
