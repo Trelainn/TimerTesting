@@ -346,7 +346,7 @@ def record_time():
             else: 
                 video_permission = False
             if lap_number is not None:
-                lap_number = float(lap_number[0])+ 1
+                lap_number = int(lap_number[0])+ 1
             else:
                 lap_number = 1
             if video_permission:
