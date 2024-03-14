@@ -279,8 +279,8 @@ def participant():
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
 
-@app.route('/particpant_photo/<user_id>', methods=['POST'])
-def particpant_photo(user_id):
+@app.route('/participant_photo/<user_id>', methods=['POST'])
+def participant_photo(user_id):
     status = get_system_parameters()
     competitor = get_competitor_info(status['current_race_number'], user_id)
     try:
