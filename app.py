@@ -398,7 +398,7 @@ def video(race_number, tag, lap, user_id):
             return Response("Server available", status=400,)
         return Response("No video available", status=403,)
 
-@app.route('/profile_picture/', methods=['POST'])
+@app.route('/profile_picture/<race_number>/<tag>/<code>', methods=['POST'])
 def profile_picture(race_number, tag, code):
 	return send_file('/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'+str(race_number)+'_'+str(tag)+'_'+str(code)+'.jpeg', as_attachment=True)
 
