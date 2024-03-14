@@ -257,13 +257,6 @@ def participant():
             tag = request.json['tag']
             video_permission = request.json['video_permission']
             photo = request.json['photo']
-            error_image = None
-            if photo:
-                try:
-                    image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(tag)+'_'+str(status['race_code'])+'.jpeg')
-                except Exception as e:
-                    error_image = e
-                    print('The file could not be saved due to the following error: '+str(e))
             db, c = get_db()
             c.execute('select * from race_competitors where race_number = %s and tag = %s',(status['current_race_number'], tag))
             competitor = c.fetchone()
@@ -280,7 +273,7 @@ def participant():
 				)
                 message = 'Participant updated'
             db.commit()
-            return {'ok': True, 'status': 'success', 'process': 'Add Participant', 'message': message,  'image_error': str(error_image)}
+            return {'ok': True, 'status': 'success', 'process': 'Add Participant', 'message': message}
         else:
             return {'ok': False, 'process': 'Add Participant', 'status': 'failed'}
     except Exception as e: 
