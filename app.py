@@ -412,9 +412,9 @@ def video(race_number, tag, lap, user_id):
 def profile_picture(race_number, tag):
     path = '/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'
     name = str(race_number) + '_' + str(tag)+'.*'
-    for root, dirs, files in os.walk(path):
-        if name in files:
-            image = os.path.join(root, name)
+    for file in os.listdir(path):
+        if file.startswith(name):
+            image = os.path.join(path, file)
             extension = image.filename.rsplit('.', 1)[1].lower()
             return send_file(image, as_attachment=True, download_name=str(race_number)+'.'+extension)
     return {'ok': False, 'files': os.listdir(path), 'name': name}
