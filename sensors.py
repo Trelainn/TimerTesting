@@ -101,6 +101,8 @@ def readRFID():
             reading = serialport.readlines()
             if reading:
                 tag = reading[0].decode().split('\n')[0]
+                if tag == 'CONNECTED':
+                    status['antenna_on'] = True
                 print(tag)
                 time_now = datetime.datetime.now()
                 try:
