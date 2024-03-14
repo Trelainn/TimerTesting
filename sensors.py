@@ -120,13 +120,8 @@ def readRFID():
             time.sleep(1)
 
 def saveLapTime(tag, time_recorded):
-    print(tag)
-    print(time_recorded)
-    ext = '{}/{}'.format(tag,time_recorded)
-    print(ext)
-    #print("http://localhost:8080/record_time/"+)
-    #response=requests.post("http://localhost:8080/record_time/"+str(tag)+"/"+str(time_recorded))
-    #print(response.json())
+    response=requests.post("http://localhost:8080/record_time/", json={'tag': str(tag), 'time': str(time_recorded)})
+    print(response.json())
 
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BOARD)
