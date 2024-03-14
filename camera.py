@@ -14,18 +14,22 @@ class Camera:
 
     def create_video(self, images, video_name):
         if images:
-            #now = datetime.now()
-            frame = images[0]
-            height, width, layers = frame.shape
-            fourcc = cv2.VideoWriter_fourcc(*'avc1')
-            video = cv2.VideoWriter('/static/videos/'+video_name+'.mp4', fourcc, self.fps, (width, height), True)
+            try:
+                print("video!")
+                #now = datetime.now()
+                frame = images[0]
+                height, width, layers = frame.shape
+                fourcc = cv2.VideoWriter_fourcc(*'avc1')
+                video = cv2.VideoWriter('/static/videos/'+video_name+'.mp4', fourcc, self.fps, (width, height), True)
 
-            for image in images:
-                video.write(cv2.cvtColor(image,cv2.COLOR_BGRA2BGR))
-            
-            cv2.destroyAllWindows()
-            video.release()
-            #print(datetime.now()-now)
+                for image in images:
+                    video.write(cv2.cvtColor(image,cv2.COLOR_BGRA2BGR))
+                
+                cv2.destroyAllWindows()
+                video.release()
+                #print(datetime.now()-now)
+            except Exception as e:
+                print (e)
         else:
             pass
             #print('no buffer')
