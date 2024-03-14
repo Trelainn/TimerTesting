@@ -124,6 +124,7 @@ def readRFID():
 
 def saveLapTime(tag, time_recorded, video):
     response=requests.post("http://localhost:8080/record_time/", json={'tag': str(tag), 'time': str(time_recorded)})
+    print (response)
     if response.json()['ok']:
         if response.json()['video_permission']:
             camera.create_video(video, response.json()['video_name'])
