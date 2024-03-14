@@ -61,6 +61,7 @@ def checkStatus():
             camera.start_camera()
         if camera.get_camera_on() == True and status['camera_on'] == False:
             camera.stop_camera()
+        status['race_status'] = response.json()['race_status']
         time.sleep(1)
 
 def checkInternetConnection():
@@ -90,6 +91,17 @@ def updateWifiList():
         requests.post("http://localhost:8080/update_list_wifi_networks", json=wifi_management.list_wifi_networks())
         time.sleep(15)
 
+def readRFID():
+    serialport = serial.Serial("/dev/ttyUSB0", 9600, timeout=0.01)
+    while True:
+        if status['race_status'] == 'racing':
+            reading = serialport.readlines()
+            if reading:
+                tag = reading[0].decode().split('\n')[0]
+                print(tag)
+        else:
+            time.sleep(1)
+
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(12, GPIO.OUT)
@@ -100,6 +112,7 @@ if __name__ == "__main__":
     Thread(target=checkStatus, args=()).start()
     Thread(target=checkInternetConnection, args=()).start()
     Thread(target=updateWifiList, args=()).start()
+    Thread(target=readRFID, args=()).start()
 '''
 
 camera.start_camera()
