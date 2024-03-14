@@ -14,7 +14,7 @@ class Camera:
 
     def create_video(self, images, video_name):
         if images:
-            now = datetime.now()
+            #now = datetime.now()
             frame = images[0]
             height, width, layers = frame.shape
             fourcc = cv2.VideoWriter_fourcc(*'avc1')
@@ -25,9 +25,10 @@ class Camera:
             
             cv2.destroyAllWindows()
             video.release()
-            print(datetime.now()-now)
+            #print(datetime.now()-now)
         else:
-            print('no buffer')
+            pass
+            #print('no buffer')
 
     def run_camera(self):
         while self.system_on:
