@@ -411,13 +411,13 @@ def video(race_number, tag, lap, user_id):
 @app.route('/profile_picture/<race_number>/<tag>', methods=['GET'])
 def profile_picture(race_number, tag):
     path = '/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'
-    name = str(race_number) + '_' + str(tag)
+    name = str(race_number) + '_' + str(tag)+'.*'
     for root, dirs, files in os.walk(path):
         if name in files:
             image = os.path.join(root, name)
             extension = image.filename.rsplit('.', 1)[1].lower()
             return send_file(image, as_attachment=True, download_name=str(race_number)+'.'+extension)
-
+    return {'ok': False}
 @app.route('/update_status', methods=['POST'])
 def update_status():
     db, c = get_db()
