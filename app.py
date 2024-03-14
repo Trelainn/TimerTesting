@@ -299,7 +299,9 @@ def participant_photo(user_id):
                     return {'ok': False, 'error': 'Empty file'}
                 if image and allowed_file(image.filename):
                     try:
-                        image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(competitor['tag'])+'_'+str(status['race_code'])+'.jpeg')
+                        extension = image.filename.rsplit('.', 1)[1].lower()
+                        print(extension)
+                        image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(competitor['tag'])+'.jpeg')
                         return {'ok': True}
                     except Exception as e:
                         return {'ok': False, 'error': 'The file could not be saved due to the following error: '+str(e)}
@@ -406,9 +408,9 @@ def video(race_number, tag, lap, user_id):
             return Response("Server available", status=400,)
         return Response("No video available", status=403,)
 
-@app.route('/profile_picture/<race_number>/<tag>/<code>', methods=['GET'])
-def profile_picture(race_number, tag, code):
-	return send_file('/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'+str(race_number)+'_'+str(tag)+'_'+str(code)+'.jpeg', as_attachment=True)
+@app.route('/profile_picture/<race_number>/<tag>', methods=['GET'])
+def profile_picture(race_number, tag):
+	return send_file('/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'+str(race_number)+'_'+str(tag)'.jpeg', as_attachment=True)
 
 @app.route('/update_status', methods=['POST'])
 def update_status():
