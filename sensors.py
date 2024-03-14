@@ -18,6 +18,8 @@ internet_available = False
 antenna_on = False
 led_status = 'Starting'
 register_in_network = None
+times = {}
+lap_threshold = 20
 
 def readSerial():
     while True:
@@ -99,9 +101,24 @@ def readRFID():
             reading = serialport.readlines()
             if reading:
                 tag = reading[0].decode().split('\n')[0]
-                print(tag)
+                time_now = datetime.datetime.now()
+                try:
+                    if tag in times:
+                        last_time = times[tag]
+                        time_recorded = time_now - last_time
+                        if time_recorded > lap_threshold:
+                            times[tag] = time_now
+                            Thread(target=saveLapTime, args=(tag, time_recorded)).start()
+                except Exception as e:
+                    print(e)
+                    times[tag] = time_now
+
         else:
             time.sleep(1)
+
+def saveLapTime(tag, time_recorded):
+    response=requests.post("http://localhost:8080/record_time/"+str(tag)+"/"+str(time_recorded))
+    print(response.json())
 
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BOARD)
