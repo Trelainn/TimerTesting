@@ -19,7 +19,7 @@ antenna_on = False
 led_status = 'Starting'
 register_in_network = None
 times = {}
-lap_threshold = 5
+lap_threshold = 20
 
 def readSerial():
     while True:
@@ -110,7 +110,7 @@ def readRFID():
                 try:
                     if tag in times:
                         last_time = times[tag]
-                        time_recorded = (time_now - last_time).seconds
+                        time_recorded = (time_now - last_time).milliseconds/1000.0
                         if time_recorded > lap_threshold:
                             times[tag] = time_now
                             Thread(target=saveLapTime, args=(tag_read, time_recorded, camera.buffer)).start()
@@ -122,7 +122,6 @@ def readRFID():
             time.sleep(1)
 
 def saveLapTime(tag, time_recorded, video):
-    print({'tag': str(tag), 'time': str(time_recorded)})
     response=requests.post("http://localhost:8080/record_time/", json={'tag': str(tag), 'time': str(time_recorded)})
     if response.json()['video_permission']:
         camera.create_video(video, response.json()['video_name'])
