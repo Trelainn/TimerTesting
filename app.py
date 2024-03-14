@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 import string
 import random
 import time
+import os
 
 app = Flask(__name__)
 wifi_list = []
@@ -301,7 +302,7 @@ def participant_photo(user_id):
                     try:
                         extension = image.filename.rsplit('.', 1)[1].lower()
                         print(extension)
-                        image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(competitor['tag'])+'.jpeg')
+                        image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(competitor['tag'])+'.'+extension)
                         return {'ok': True}
                     except Exception as e:
                         return {'ok': False, 'error': 'The file could not be saved due to the following error: '+str(e)}
@@ -397,7 +398,6 @@ def view_participants():
         pass
     return participants
 
-
 @app.route('/video/', methods=['POST'])
 def video(race_number, tag, lap, user_id):
     video_info = get_video_info(race_number=race_number, tag=tag, lap=lap, user_id=user_id)
@@ -410,7 +410,13 @@ def video(race_number, tag, lap, user_id):
 
 @app.route('/profile_picture/<race_number>/<tag>', methods=['GET'])
 def profile_picture(race_number, tag):
-	return send_file('/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'+str(race_number)+'_'+str(tag)+'.jpeg', as_attachment=True, download_name=str(race_number))
+    path = '/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'
+    name = str(race_number) + '_' + str(tag)
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            image = os.path.join(root, name)
+            extension = image.filename.rsplit('.', 1)[1].lower()
+            return send_file(image, as_attachment=True, download_name=str(race_number)+'.'+extension)
 
 @app.route('/update_status', methods=['POST'])
 def update_status():
