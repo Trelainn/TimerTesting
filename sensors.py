@@ -110,7 +110,7 @@ def readRFID():
                 try:
                     if tag in times:
                         last_time = times[tag]
-                        time_recorded = (time_now - last_time).milliseconds/1000.0
+                        time_recorded = (time_now - last_time)/1000.0
                         if time_recorded > lap_threshold:
                             times[tag] = time_now
                             Thread(target=saveLapTime, args=(tag_read, time_recorded, camera.buffer)).start()
@@ -123,8 +123,9 @@ def readRFID():
 
 def saveLapTime(tag, time_recorded, video):
     response=requests.post("http://localhost:8080/record_time/", json={'tag': str(tag), 'time': str(time_recorded)})
-    if response.json()['video_permission']:
-        camera.create_video(video, response.json()['video_name'])
+    if response.json()['ok']:
+        if response.json()['video_permission']:
+            camera.create_video(video, response.json()['video_name'])
 
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BOARD)
