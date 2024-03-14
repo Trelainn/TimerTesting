@@ -103,6 +103,7 @@ def readRFID():
                 tag = reading[0].decode().split('\n')[0]
                 if tag == 'CONNECTED':
                     status['antenna_on'] = True
+                tag_read = tag
                 time_now = datetime.datetime.now()
                 try:
                     if tag in times:
@@ -110,7 +111,7 @@ def readRFID():
                         time_recorded = (time_now - last_time).seconds
                         if time_recorded > lap_threshold:
                             times[tag] = time_now
-                            Thread(target=saveLapTime, args=(tag, time_recorded)).start()
+                            Thread(target=saveLapTime, args=(tag_read, time_recorded)).start()
                     else:
                         times[tag] = time_now
                 except Exception as e:
