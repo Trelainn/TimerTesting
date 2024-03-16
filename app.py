@@ -107,10 +107,11 @@ def get_race_info(race_number, user_id):
         for competitor in race_competitors:
             race_info['participants'].append(get_competitor_info(race_number=race_number, user_id=competitor[0], requester = user_id))
         if race_info['category'] == 'Laps race' and race_info['status'] == 'started':
-            c.execute('select max(lap) from race_competitors_laps where race_number = %s GROUP BY tag ORDER BY max asc', (race_number, ))
+            c.execute('select count(lap) from race_competitors_laps where race_number = %s', (race_number, ))
             min_lap = c.fetchone()
+            race_info['totalExpectedLaps']=race_info['expectedLaps']*len(race_info['participants'])
             if min_lap is not None:
-                if min_lap[0] == race_info['expectedLaps']:
+                if min_lap[0] == race_info['expectedLaps']*len(race_info['participants']):
                     requests.post("http://localhost:8080/race", json={'stop_race': True, 'user_id': race_info['creator']})
         race_info['participants_amount'] = len(race_info['participants'])
     return race_info
