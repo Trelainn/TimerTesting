@@ -475,6 +475,19 @@ def update_wifi_network():
     temp = wifi_network_change_data
     wifi_network_change_data = {'change': False}
     return temp
+
+@app.route('/close_past_races', methods=['POST'])
+def close_past_races():
+    db, c = get_db()
+    try:
+        c.execute(
+            'update races set status = "finished" where race_status <> "finished"'
+        )
+        db.commit()
+        return {'ok': True}
+    except Exception as e:
+        return {'ok': False, "error": str(e)}   
+
 '''
 @app.route('/environment_variables', methods=['GET'])
 def environment_variables():
