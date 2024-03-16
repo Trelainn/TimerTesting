@@ -216,8 +216,8 @@ def race():
         except Exception as e: 
             return {'ok': False, "error": str(e)} 
     elif status['race_status'] == 'configure_race' and 'user_id' in request.json:
-        if status['race_owner'] == request.json()['user_id']:
-            if 'track' in request.json():
+        if status['race_owner'] == request.json['user_id']:
+            if 'track' in request.json:
                 c.execute(
                     'update races set track = %s where race_number = %s', (request.json['track'], status['next_race_number']-1)
                 )
