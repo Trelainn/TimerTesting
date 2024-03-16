@@ -96,6 +96,7 @@ def get_race_info(race_number, user_id):
             race_info['total_time'] = (datetime.now()-race[6]).seconds
             if race_info['category'] == 'Time race':
                 if race_info['total_time'] > race_info['expectedTime']:
+                    race_info['total_time'] = race_info['expectedTime']
                     requests.post("http://localhost:8080/race/", json={'stop_race': True, 'user_id': race_info['creator']})
             race_info['date'] = race[6]
         else:
