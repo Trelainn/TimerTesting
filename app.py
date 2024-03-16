@@ -106,7 +106,7 @@ def get_race_info(race_number, user_id):
         race_competitors = c.fetchall()
         for competitor in race_competitors:
             race_info['participants'].append(get_competitor_info(race_number=race_number, user_id=competitor[0], requester = user_id))
-        if race_info['category'] == 'Laps race':
+        if race_info['category'] == 'Laps race' and race_info['status'] == 'started':
             c.execute('select max(lap) from race_competitors_laps where race_number = %s GROUP BY tag ORDER BY max asc', (race_number, ))
             min_lap = c.fetchone()
             if min_lap is not None:
