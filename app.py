@@ -622,16 +622,19 @@ def view_participants():
         pass
     return participants
 
-@app.route('/video', methods=['POST'])
+@app.route('/video', methods=['GET'])
 def video(race_number, tag, lap, user_id):
-    video_info = get_video_info(race_number=race_number, tag=tag, lap=lap, user_id=user_id)
-    if video_info['video_available']:
-        return send_file('/home/Trelainn/Documents/TimerTesting/static/videos/'+str(race_number)+'-'+str(tag)+'-'+str(lap)+'.mp4', as_attachment=True)
-    else:
-        if video_info['video_uploaded']:
-            return Response("Server available", status=400,)
-        return Response("No video available", status=403,)
-
+    try:
+        video_info = get_video_info(race_number=race_number, tag=tag, lap=lap, user_id=user_id)
+        if video_info['video_available']:
+            return send_file('/home/Trelainn/Documents/TimerTesting/static/videos/'+str(race_number)+'-'+str(tag)+'-'+str(lap)+'.mp4', as_attachment=True)
+        else:
+            if video_info['video_uploaded']:
+                return Response("Server available", status=400,)
+            return Response("No video available", status=403,)
+    except Exception as e:
+        return {'ok': False, "error": str(e)} 
+    
 @app.route('/profile_picture/<race_number>/<participant_id>', methods=['GET'])
 def profile_picture(race_number, participant_id):
     path = '/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'
