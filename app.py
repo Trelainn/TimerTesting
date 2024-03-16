@@ -481,7 +481,7 @@ def close_past_races():
     db, c = get_db()
     try:
         c.execute(
-            'update races set status = "finished" where race_status <> "finished"'
+            'update races set status = %s where race_status <> %s', ("finished", "finished")
         )
         db.commit()
         return {'ok': True}
