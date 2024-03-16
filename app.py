@@ -384,6 +384,67 @@ def participant_photo(participant_id):
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
 
+@app.route('/participant_photo/<participant_id>', methods=['PUT'])
+def participant_photo_put(participant_id):
+    db, c = get_db()
+    status = get_system_parameters()
+    c.execute('select photo from race_competitors where race_number = %s and participant_id = %s',(status['current_race_number'], participant_id))
+    participant_photo = c.fetchone()
+    if participant_photo is None:
+        return {'ok': False, 'status': 'failed', 'process': 'Participant Photo', 'error': 'User is not registered in the race'}
+    if participant_photo[0] == False:
+        return {'ok': False, 'status': 'failed', 'process': 'Participant Photo', 'error': 'User does not has a photo in the race'}
+    try:
+        if status['race_status'] == 'configure_race':
+            if 'image' not in request.files:
+                return {'ok': False, 'error': 'Wrong file type'}
+            image = request.files['image']
+            if image.filename == '':
+                return {'ok': False, 'error': 'Empty file'}
+            if image and allowed_file(image.filename):
+                try:
+                    extension = image.filename.rsplit('.', 1)[1].lower()
+                    image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(participant_id)+'.'+extension)
+                    c.execute(
+                        'update race_competitors set photo = %s where race_number = %s and participant_id = %s', 
+                        (True, status['current_race_number'], participant_id)
+                    )
+                    db.commit()
+                    return {'ok': True, 'process': 'Participant Photo', 'participant_id': participant_id, 'photo_url': url_for('profile_picture', race_number=status['current_race_number'], participant_id=participant_id)}
+                except Exception as e:
+                    return {'ok': False, 'error': 'The file could not be saved due to the following error: '+str(e)}
+    except Exception as e: 
+        return {'ok': False, "error": str(e)}  
+    
+@app.route('/participant_photo/<participant_id>', methods=['DELETE'])
+def participant_photo_delete(participant_id):
+    db, c = get_db()
+    status = get_system_parameters()
+    c.execute('select photo from race_competitors where race_number = %s and participant_id = %s',(status['current_race_number'], participant_id))
+    participant_photo = c.fetchone()
+    if participant_photo is None:
+        return {'ok': False, 'status': 'failed', 'process': 'Participant Photo', 'error': 'User is not registered in the race'}
+    if participant_photo[0] == False:
+        return {'ok': False, 'status': 'failed', 'process': 'Participant Photo', 'error': 'User does not has a photo in the race'}
+    try:
+        if status['race_status'] == 'configure_race':
+            path = '/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'
+            name = str(status['current_race_number']) + '_' + str(participant_id)
+            files = []
+            for file in os.listdir(path):
+                files.append(file)
+                if file.startswith(name):
+                    image = os.path.join(path, file)
+                    os.remove(image)
+                    c.execute(
+                        'update race_competitors set photo = %s where race_number = %s and participant_id = %s', 
+                        (False, status['current_race_number'], participant_id)
+                    )
+                    db.commit()
+                return {'ok': True, 'process': 'Participant Photo', 'participant_id': participant_id, 'photo_url': None}
+    except Exception as e: 
+        return {'ok': False, "error": str(e)}  
+
 @app.route('/start_race', methods=['POST'])
 def start_race():
     status = get_system_parameters()
