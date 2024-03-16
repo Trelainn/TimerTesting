@@ -131,7 +131,7 @@ def get_competitor_info(race_number, user_id, requester):
         competitors_rank = c.fetchall()
         rank = 1
         for competitor_rank in competitors_rank:
-            if competitor_rank[0] == user_id:
+            if competitor_rank[0] == competitor_info['toyTag']:
                 competitor_info['rank'] = rank
             else:
                 rank = rank + 1
