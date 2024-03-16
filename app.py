@@ -70,80 +70,92 @@ def update_system_parameters(race_number, race_status, user_id):
 
 def get_race_info(race_number, user_id):
     db, c = get_db()
-    status = get_system_parameters()
     c.execute('select * from races where race_number = %s', (race_number, ))
     race = c.fetchone()
     race_info = {}
-    race_info['race_number'] = race_number
+    race_info['id'] = race_number
     if race is not None:
-        race_info['user_id'] = race[1]
-        race_info['status'] = race[2]
-        race_info['track'] = race[3]
-        race_info['race_type'] = race[4]
-        race_info['limit_number'] = race[5]
-        if  race_info['status'] == 'finished':
-            race_info['race_time'] = (race[7] - race[6]).seconds
-        if race[6] is not None:
-            race_info['race_time'] = (datetime.now()-race[6]).seconds
+        race_info['creator'] = race[1]
+        if race[2] == 'configure race':
+            race_info['status'] = 'configuring'
+        elif race[2] == 'racing':
+            race_info['status'] = 'started'
         else:
-            race_info['race_time'] = 0
-        race_info['race_competitors'] = []
-        c.execute('select tag from race_competitors where race_number = %s', (race_number, ))
+            race[2] = 'finished'
+        race_info['track'] = race[3]
+        race_info['category'] = race[4]
+        if race_info['category'] == 'Laps race':
+            race_info['expectedLaps'] = race[5]
+        elif race_info['category'] == 'Time race':
+            race_info['expectedTime'] = race[5]   
+        if  race_info['status'] == 'finished':
+            race_info['total_time'] = (race[7] - race[6]).seconds
+        if race[6] is not None:
+            race_info['total_time'] = (datetime.now()-race[6]).seconds
+            race_info['date'] = race[6]
+        else:
+            race_info['total_time'] = 0
+        race_info['participants'] = []
+        c.execute('select user_id from race_competitors where race_number = %s', (race_number, ))
         race_competitors = c.fetchall()
         for competitor in race_competitors:
-            race_info['race_competitors'].append(get_competitor_info(race_number=race_number, user_id=user_id))
-        race_info['race_competitors_amount'] = len(race_info['race_competitors'])
+            race_info['participants'].append(get_competitor_info(race_number=race_number, user_id=competitor[0], requester = user_id))
+        race_info['participants_amount'] = len(race_info['participants'])
     return race_info
 
-def get_competitor_info(race_number, user_id):
+def get_competitor_info(race_number, user_id, requester):
     db, c = get_db()
     c.execute('select * from race_competitors where race_number = %s and user_id = %s', (race_number, user_id))
     competitor = c.fetchone()
     competitor_info = {}
-    competitor_info['race_number'] = race_number
-    competitor_info['user_id'] = user_id
+    #competitor_info['race_number'] = race_number
+    competitor_info['user'] = user_id
     if competitor is not None:
-        competitor_info['tag'] = competitor[1]
+        competitor_info['toyTag'] = competitor[1]
         competitor_info['nickname'] = competitor[2]
+        competitor_info['participant_id'] = competitor[9]
         competitor_info['toy'] = competitor[4]
-        competitor_info['gender'] = competitor[5]
-        competitor_info['weight_category'] = competitor[6]
-        competitor_info['photo'] = competitor[7]
-        if competitor_info['photo']:
-            competitor_info['photo_url'] = url_for('profile_picture', race_number=race_number, tag=competitor_info['tag'])
-        competitor_info['video_permission'] = competitor[8]
-        if competitor_info['video_permission'] and competitor_info['user_id'] == user_id:
-            competitor_info['laps'] = get_laps_info(race_number, competitor_info['tag'], True, user_id)
-        else:
-            competitor_info['laps'] = get_laps_info(race_number, competitor_info['tag'], False, user_id)
+        #competitor_info['gender'] = competitor[5]
+        #competitor_info['weight_category'] = competitor[6]
+        #competitor_info['photo'] = competitor[7]
+        if competitor[7]:
+            competitor_info['profilePictureURL'] = url_for('profile_picture', race_number=race_number, participant_id=competitor_info['participant_id'])
+        #competitor_info['video_permission'] = competitor[8]
+        temp = get_laps_info(race_number, competitor_info['tag'], competitor[8] if requester == user_id else False , user_id, competitor_info['participant_id'])
+        competitor['laps'] = temp['laps']
+        
+        competitor_info['rank'] = 1
+        competitor_info['bestLap'] = temp['best_time']
+
     return competitor_info
 
-def get_laps_info(race_number, tag, video_permission, user_id):
+def get_laps_info(race_number, tag, video_permission, user_id, participant_id):
     db, c = get_db()
     c.execute('select * from race_competitors_laps where race_number = %s and tag = %s', (race_number, tag))
     competitor_laps = c.fetchall()
     competitor_laps_info = {}
-    competitor_laps_info['race_number'] = race_number
-    competitor_laps_info['tag'] = tag
-    competitor_laps_info['video_permission'] = video_permission
-    competitor_laps_info['best_lap'] = -1
+    #competitor_laps_info['race_number'] = race_number
+    #competitor_laps_info['tag'] = tag
+    #competitor_laps_info['video_permission'] = video_permission
+    #competitor_laps_info['best_lap'] = -1
     competitor_laps_info['best_time'] = -1
-    competitor_laps_info['laps_amount'] = 0
+    #competitor_laps_info['laps_amount'] = 0
     competitor_laps_info['laps'] = []
     if competitor_laps is not None:
-        competitor_laps_info['laps_amount'] = len(competitor_laps)
+        #competitor_laps_info['laps_amount'] = len(competitor_laps)
         for competitor_lap in competitor_laps:
             lap = {}
-            lap['lap'] = competitor_lap[2]
+            lap['id'] = str(participant_id) + '_' + str(competitor_lap[2])
+            lap['lapNumber'] = competitor_lap[2]
             lap['time'] = competitor_lap[3]/1000
             if lap['time'] < competitor_laps_info['best_time'] or competitor_laps_info['best_time'] == -1:
                 competitor_laps_info['best_time'] = lap['time']
-                competitor_laps_info['best_lap'] =  lap['lap']
+                #competitor_laps_info['best_lap'] =  lap['lap']
             if video_permission:
-                lap['video_name'] = competitor_lap[4]
-                lap['video_url'] = url_for('video', race_number=race_number, tag=tag, lap=competitor_lap[2], user_id=user_id)
-            lap['info_uploaded'] = competitor_lap[5]
-            lap['video_uploaded'] = competitor_lap[6]
+                #lap['video_name'] = competitor_lap[4]
+                lap['videoLink'] = url_for('video', race_number=race_number, tag=tag, lap=competitor_lap[2], user_id=user_id)
+            #lap['info_uploaded'] = competitor_lap[5]
+            #lap['video_uploaded'] = competitor_lap[6]
             competitor_laps_info['laps'].append(lap)
     return competitor_laps_info
 
