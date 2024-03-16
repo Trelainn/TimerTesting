@@ -229,6 +229,27 @@ def race():
                 )
                 db.commit()
                 return {'ok': True, 'process': 'Race type', 'status': 'success'}
+            elif 'start_race' in request.json:
+                try:
+                    c.execute(
+                        'update races set race_begin_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'racing', status['current_race_number'],)
+                    )
+                    db.commit()
+                    update_system_parameters(race_number=status['next_race_number'], race_status='racing', user_id=status['race_owner'], code=status['race_code'])
+                    return {'ok': True, 'process': 'Start Race', 'status': 'success'}
+                except Exception as e: 
+                    return {'ok': False, "error": str(e)}  
+    elif status['race_status'] == 'racing' and 'user_id' in request.json:
+        if status['race_owner'] == request.json['user_id']:
+            try:
+                c.execute(
+                    'update races set race_final_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'finished', status['current_race_number'],)
+                )
+                db.commit()
+                update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ', code=' ')
+                return {'ok': True, 'process': 'Stop Race', 'status': 'success'}
+            except Exception as e: 
+                return {'ok': False, "error": str(e)}       
     return {'ok': False}
             
 @app.route('/create_race', methods=['POST'])
