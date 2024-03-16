@@ -81,7 +81,7 @@ def get_race_info(race_number, user_id):
         elif race[2] == 'racing':
             race_info['status'] = 'started'
         else:
-            race[2] = 'finished'
+            race_info['status'] = 'finished'
         race_info['track'] = race[3]
         race_info['category'] = race[4]
         if race_info['category'] == 'Laps race':
