@@ -268,7 +268,7 @@ def race():
         if status['race_owner'] == request.json['user_id'] and request.json['stop_race']:
             try:
                 c.execute(
-                    'select race_type, limit, race_begin_time from races where race_number = %s', (status['current_race_number'], ) 
+                    'select race_type, limit_number, race_begin_time from races where race_number = %s', (status['current_race_number'], ) 
                 )
                 race = c.fetchone()
                 race_type = race[0]
