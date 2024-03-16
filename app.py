@@ -313,7 +313,6 @@ def participant_put(participant_id):
         return {'ok': True, 'status': 'success', 'process': 'Participant', 'participant': {
                     'participant_id': participant_id,
                     'nickname': nickname,
-                    'profilePictureURL': None,
                     'toy': toy,
                     'toyTag': tag}}
     else:
