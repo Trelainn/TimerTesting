@@ -121,7 +121,7 @@ def get_competitor_info(race_number, user_id, requester):
         if competitor[7]:
             competitor_info['profilePictureURL'] = url_for('profile_picture', race_number=race_number, participant_id=competitor_info['participant_id'])
         #competitor_info['video_permission'] = competitor[8]
-        temp = get_laps_info(race_number, competitor_info['tag'], competitor[8] if requester == user_id else False , user_id, competitor_info['participant_id'])
+        temp = get_laps_info(race_number, competitor_info['toyTag'], competitor[8] if requester == user_id else False , user_id, competitor_info['participant_id'])
         competitor['laps'] = temp['laps']
         
         competitor_info['rank'] = 1
