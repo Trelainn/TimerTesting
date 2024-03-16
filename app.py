@@ -229,6 +229,7 @@ def race():
                 )
                 db.commit()
                 return {'ok': True, 'process': 'Race type', 'status': 'success'}
+    return {'ok': False}
             
 @app.route('/create_race', methods=['POST'])
 def create_race():
