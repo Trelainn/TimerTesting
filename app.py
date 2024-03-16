@@ -53,10 +53,9 @@ def get_system_parameters():
         current_status['next_race_number'] = int(system_paramters[0][1])
         if current_status['race_status'] != 'no race':
             current_status['current_race_number'] = current_status['next_race_number'] - 1
-            current_status['race_code'] = system_paramters[1][1]
     return current_status 
 
-def update_system_parameters(race_number, race_status, user_id, code):
+def update_system_parameters(race_number, race_status, user_id):
     db, c = get_db()
     c.execute(
         'update system_parameters set value = %s where id = %s', (race_number, 'next_race_number')
@@ -66,9 +65,6 @@ def update_system_parameters(race_number, race_status, user_id, code):
     )
     c.execute(
         'update system_parameters set value = %s where id = %s', (user_id, 'race_owner')
-    )
-    c.execute(
-        'update system_parameters set value = %s where id = %s', (code, 'race_code')
     )
     db.commit()
 
@@ -189,7 +185,7 @@ def system_parameters():
 @app.route('/reset_system_parameters', methods=['GET'])
 def reset_system_parameters():
     status = get_system_parameters()
-    update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ', code=' ')
+    update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ')
     return get_system_parameters()
 
 @app.route('/race', methods=['POST', 'PUT'])
@@ -199,13 +195,13 @@ def race():
     if status['race_status'] == 'no race' and 'user_id' in request.json:
         try:
             user_id = request.json['user_id']
-            race_code = ''.join(random.choice(string.ascii_uppercase) for x in range(4))
+            #race_code = ''.join(random.choice(string.ascii_uppercase) for x in range(4))
             race_number = status['next_race_number']
             race_status = 'configure_race'  
             c.execute(
-                'insert into races (race_number, user_id, code, race_status) values (%s, %s, %s, %s)', (race_number , user_id, race_code, race_status)
+                'insert into races (race_number, user_id, race_status) values (%s, %s, %s)', (race_number , user_id, race_status)
 			)
-            update_system_parameters(race_number=race_number+1, race_status=race_status, user_id=user_id, code=race_code)
+            update_system_parameters(race_number=race_number+1, race_status=race_status, user_id=user_id)
             db.commit()
             return {'ok': True, 'process': 'Start race', 'status': 'success', 'race_number': race_number}
         except Exception as e: 
@@ -230,7 +226,7 @@ def race():
                         'update races set race_begin_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'racing', status['current_race_number'],)
                     )
                     db.commit()
-                    update_system_parameters(race_number=status['next_race_number'], race_status='racing', user_id=status['race_owner'], code=status['race_code'])
+                    update_system_parameters(race_number=status['next_race_number'], race_status='racing', user_id=status['race_owner'])
                     return {'ok': True, 'process': 'Start Race', 'status': 'success'}
                 except Exception as e: 
                     return {'ok': False, "error": str(e)}  
@@ -241,7 +237,7 @@ def race():
                     'update races set race_final_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'finished', status['current_race_number'],)
                 )
                 db.commit()
-                update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ', code=' ')
+                update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ')
                 return {'ok': True, 'process': 'Stop Race', 'status': 'success'}
             except Exception as e: 
                 return {'ok': False, "error": str(e)}       
@@ -260,14 +256,14 @@ def create_race():
     try:
         if status['race_status'] == 'no race':
             user_id = request.json['user_id']
-            race_code = ''.join(random.choice(string.ascii_uppercase) for x in range(4))
+            #race_code = ''.join(random.choice(string.ascii_uppercase) for x in range(4))
             race_number = status['next_race_number']
             race_status = 'configure_race'
             db, c = get_db()
             c.execute(
-                'insert into races (race_number, user_id, code, race_status) values (%s, %s, %s, %s)', (race_number , user_id, race_code, race_status)
+                'insert into races (race_number, user_id, race_status) values (%s, %s, %s)', (race_number , user_id, race_status)
 			)
-            update_system_parameters(race_number=race_number+1, race_status=race_status, user_id=user_id, code=race_code)
+            update_system_parameters(race_number=race_number+1, race_status=race_status, user_id=user_id)
             db.commit()
             return {'ok': True, 'process': 'Start race', 'status': 'success', 'race_number': race_number}
         else:
@@ -479,7 +475,7 @@ def start_race():
                 'update races set race_begin_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'racing', status['current_race_number'],)
 			)
             db.commit()
-            update_system_parameters(race_number=status['next_race_number'], race_status='racing', user_id=status['race_owner'], code=status['race_code'])
+            update_system_parameters(race_number=status['next_race_number'], race_status='racing', user_id=status['race_owner'])
             return {'ok': True, 'process': 'Start Race', 'status': 'success'}
         return {'ok': False, 'process': 'Start Race', 'status': 'failed'}
     except Exception as e: 
@@ -527,7 +523,7 @@ def stop_race():
                 'update races set race_final_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'finished', status['current_race_number'],)
 			)
             db.commit()
-            update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ', code=' ')
+            update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ')
             return {'ok': True, 'process': 'Stop Race', 'status': 'success'}
         return {'ok': False, 'process': 'Stop Race', 'status': 'failed'}
     except Exception as e: 
@@ -537,9 +533,8 @@ def stop_race():
 def view_race():
     user_id = request.json['user_id']
     race_number = request.json['race_number']
-    code = request.json['race_code']
     system_parameters = get_system_parameters()
-    return get_race_info(race_number=race_number, code=code, user_id=user_id)
+    return get_race_info(race_number=race_number, user_id=user_id)
     if system_parameters['race_number']-1 == race_number:
         return get_race_info(race_number=race_number, user_id=user_id)
     else:
@@ -642,7 +637,7 @@ def close_past_races():
             'update races set race_status = %s where race_status <> %s', ('finished', 'finished')
         )
         db.commit()
-        update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ', code=' ')
+        update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ')
         return {'ok': True}
     except Exception as e:
         return {'ok': False, "error": str(e)}   
