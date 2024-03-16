@@ -296,6 +296,7 @@ def participant():
 
 @app.route('/participant/<participant_id>', methods=['PUT'])
 def participant_put(participant_id):
+    status = get_system_parameters()
     db, c = get_db()
     c.execute('select * from race_competitors where race_number = %s and participant_id = %s',(status['current_race_number'], participant_id))
     competitor_by_user = c.fetchone()
