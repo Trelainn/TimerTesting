@@ -185,7 +185,7 @@ def get_video_info(race_number, tag, lap, user_id):
     db, c = get_db()
     c.execute('select * from race_competitors_laps where race_number = %s and tag = %s and lap = %s', (race_number, tag, lap))
     lap = c.fetchone()
-    c.execute('select * from race_competitors where race_number = %s and tag', (race_number, tag))
+    c.execute('select * from race_competitors where race_number = %s and tag = %s', (race_number, tag))
     race_competitors_user_id = c.fetchone()[3]
     lap_info = {}
     lap_info['race_number'] = race_number
@@ -196,10 +196,7 @@ def get_video_info(race_number, tag, lap, user_id):
         lap_info['owner_user_id'] = race_competitors_user_id 
         lap_info['time'] = lap[3]/1000
         lap_info['video_name'] = lap[4]
-        if lap_info['video_name'] != '' and user_id == race_competitors_user_id:
-            lap_info['video_available'] = True
-        else: 
-            lap_info['video_available'] = False
+        lap_info['video_available'] = lap[9]
         lap_info['info_uploaded'] = lap[5]
         lap_info['video_uploaded'] = lap[6] 
     return lap_info
