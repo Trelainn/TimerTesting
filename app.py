@@ -624,7 +624,7 @@ def video(race_number, tag, lap, user_id):
     try:
         video_info = get_video_info(race_number=race_number, tag=tag, lap=lap, user_id=user_id)
         if video_info['video_available']:
-            return send_file('/home/Trelainn/Documents/TimerTesting/static/videos/'+str(race_number)+'-'+str(tag)+'-'+str(lap)+'.mp4', as_attachment=True)
+            return send_file('/home/Trelainn/Documents/TimerTesting/static/videos/'+str(race_number)+'_'+str(tag)+'_'+str(lap)+'.mp4', as_attachment=True)
         else:
             if video_info['video_uploaded']:
                 return Response("Server available", status=400,)
