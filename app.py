@@ -72,28 +72,23 @@ def update_system_parameters(race_number, race_status, user_id, code):
     )
     db.commit()
 
-def get_race_info(race_number, code, user_id):
+def get_race_info(race_number, user_id):
     db, c = get_db()
     status = get_system_parameters()
-    if status['race_status'] != 'no race' and race_number == (status['next_race_number']-1):
-        c.execute('select * from races where race_number = %s', (race_number, ))
-    else:
-        c.execute('select * from races where race_number = %s and code = %s', (race_number, code))
+    c.execute('select * from races where race_number = %s', (race_number, ))
     race = c.fetchone()
     race_info = {}
     race_info['race_number'] = race_number
-    race_info['code'] = code
     if race is not None:
-        race_info['code'] = race[1]
-        race_info['user_id'] = race[2]
-        race_info['status'] = race[3]
-        race_info['track'] = race[4]
-        race_info['race_type'] = race[5]
-        race_info['limit_number'] = race[6]
+        race_info['user_id'] = race[1]
+        race_info['status'] = race[2]
+        race_info['track'] = race[3]
+        race_info['race_type'] = race[4]
+        race_info['limit_number'] = race[5]
         if  race_info['status'] == 'finished':
-            race_info['race_time'] = (race[8] - race[7]).seconds
-        if race[7] is not None:
-            race_info['race_time'] = (datetime.now()-race[7]).seconds
+            race_info['race_time'] = (race[7] - race[6]).seconds
+        if race[6] is not None:
+            race_info['race_time'] = (datetime.now()-race[6]).seconds
         else:
             race_info['race_time'] = 0
         race_info['race_competitors'] = []
@@ -251,7 +246,14 @@ def race():
             except Exception as e: 
                 return {'ok': False, "error": str(e)}       
     return {'ok': False}
-            
+
+@app.route('/race', methods=['GET'])
+def race_get():
+    status = get_system_parameters()
+    if status['race_status'] != 'no race' and 'user_id' in request.json:
+        return get_race_info(race_number=status['current_race_number'], user_id=request.json['user_id'])
+    return {'ok': False} 
+
 @app.route('/create_race', methods=['POST'])
 def create_race():
     status = get_system_parameters()
