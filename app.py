@@ -51,7 +51,7 @@ def get_system_parameters():
     current_status = {}
     if system_parameters is not None:
         current_status['race_owner'] = system_parameters[2][1]
-        current_status['race_status'] = system_parameters[3][1]
+        current_status['race_status'] = system_parameters[4][1]
         current_status['lap_threshold'] = system_parameters[0][1]
         current_status['next_race_number'] = int(system_parameters[1][1])
         current_status['current_race_number'] = current_status['next_race_number'] - 1
