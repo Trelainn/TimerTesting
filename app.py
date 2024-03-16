@@ -252,8 +252,8 @@ def race():
                     return {'ok': True, 'process': 'Start Race', 'status': 'success'}
                 except Exception as e: 
                     return {'ok': False, "error": str(e)}  
-    elif status['race_status'] == 'racing' and 'user_id' in request.json:
-        if status['race_owner'] == request.json['user_id']:
+    elif status['race_status'] == 'racing' and 'user_id' in request.json and 'stop_race' in request.json:
+        if status['race_owner'] == request.json['user_id'] and request.json['stop_race']:
             try:
                 c.execute(
                     'update races set race_final_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'finished', status['current_race_number'],)
