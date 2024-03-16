@@ -300,7 +300,6 @@ def participant_put(participant_id):
     db, c = get_db()
     c.execute('select * from race_competitors where race_number = %s and participant_id = %s',(status['current_race_number'], participant_id))
     competitor_by_user = c.fetchone()
-    return str(competitor_by_user)
     if competitor_by_user is not None:
         nickname = request.json['nickname']
         toy = request.json['toy']
