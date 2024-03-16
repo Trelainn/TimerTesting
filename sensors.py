@@ -132,9 +132,8 @@ def saveLapTime(tag, time_recorded, video):
             camera.create_video(video, response.json()['video_name'])
 
 def closePastRaces():
-    message = requests.post("http://localhost:8080/close_past_races")
-    print (message)
-
+    requests.post("http://localhost:8080/close_past_races")
+    
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(12, GPIO.OUT)
