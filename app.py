@@ -196,7 +196,7 @@ def get_video_info(race_number, tag, lap, user_id):
         lap_info['owner_user_id'] = race_competitors_user_id 
         lap_info['time'] = lap[3]/1000
         lap_info['video_name'] = lap[4]
-        lap_info['video_available'] = lap[8]
+        lap_info['video_available'] = lap[7]
         lap_info['info_uploaded'] = lap[5]
         lap_info['video_uploaded'] = lap[6] 
     return lap_info
