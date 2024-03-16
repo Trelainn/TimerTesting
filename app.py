@@ -269,18 +269,18 @@ def participant():
             c.execute('select * from race_competitors where race_number = %s and user_id = %s',(status['current_race_number'], user_id))
             competitor_by_user = c.fetchone()
             if competitor_by_user is not None:
-                return {'ok': False, 'status': 'failed', 'process': 'Add Participant', 'error': 'User is already registered in the race'}
+                return {'ok': False, 'status': 'failed', 'process': 'Participant', 'error': 'User is already registered in the race'}
             c.execute('select * from race_competitors where race_number = %s and tag = %s',(status['current_race_number'], tag))
             competitor_by_tag = c.fetchone()
             if competitor_by_tag is not None:
-                return {'ok': False, 'status': 'failed', 'process': 'Add Participant', 'error': 'Tag is already used by another participant'}
+                return {'ok': False, 'status': 'failed', 'process': 'Participant', 'error': 'Tag is already used by another participant'}
             if competitor_by_tag is None and competitor_by_user is None:
                 c.execute(
 					'insert into race_competitors (race_number, tag, nickname, user_id, toy, gender, weight_category, video_permission) values (%s, %s, %s, %s, %s, %s, %s, %s)', 
 					(status['current_race_number'], tag, nickname, user_id, toy, gender, weight_category, video_permission)
 				)
                 db.commit()
-                return {'ok': True, 'status': 'success', 'process': 'Add Participant', 'participant': {
+                return {'ok': True, 'status': 'success', 'process': 'Participant', 'participant': {
                     'participant_id': participant_id,
                     'nickname': nickname,
                     'user': user_id,
@@ -288,25 +288,36 @@ def participant():
                     'toy': toy,
                     'toyTag': tag}}
             else:
-                return {'ok': False, 'status': 'failed', 'process': 'Add Participant', 'error': 'An error ocurred'}
+                return {'ok': False, 'status': 'failed', 'process': 'Participant', 'error': 'An error ocurred'}
         else:
-            return {'ok': False, 'process': 'Add Participant', 'status': 'failed'}
+            return {'ok': False, 'process': 'Participant', 'status': 'failed'}
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
 
 @app.route('/participant/<participant_id>', methods=['PUT'])
 def participant_put(participant_id):
-    nickname = request.json['nickname']
-    toy = request.json['toy']
-    tag = request.json['tag']
-    video_permission = request.json['video_permission']
-    photo = request.json['photo']
-    c.execute(
-        'update race_competitors set nickname = %s, toy = %s, photo = %s, video_permission = %s where race_number = %s and tag = %s', 
-        (nickname, user_id, toy, gender, weight_category, photo, video_permission, status['current_race_number'], tag)
-    )
-    message = 'Participant updated'
-
+    db, c = get_db()
+    c.execute('select * from race_competitors where race_number = %s and participant_id = %s',(status['current_race_number'], participant_id))
+    competitor_by_user = c.fetchone()
+    if competitor_by_user is not None:
+        nickname = request.json['nickname']
+        toy = request.json['toy']
+        tag = request.json['tag']
+        photo = request.json['photo']
+        c.execute(
+            'update race_competitors set nickname = %s, toy = %s tag = %s where race_number = %s and participant_id = %s', 
+            (nickname, toy, tag, status['current_race_number'], participant_id)
+        )
+        db.commit()
+        return {'ok': True, 'status': 'success', 'process': 'Participant', 'participant': {
+                    'participant_id': participant_id,
+                    'nickname': nickname,
+                    'profilePictureURL': None,
+                    'toy': toy,
+                    'toyTag': tag}}
+    else:
+        return {'ok': False, 'status': 'failed', 'process': 'Participant', 'error': 'User is not registered in the race'}
+    
 @app.route('/participant_photo/<participant_id>', methods=['POST'])
 def participant_photo(participant_id):
     db, c = get_db()
