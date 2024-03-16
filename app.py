@@ -101,6 +101,12 @@ def get_race_info(race_number, user_id):
         for competitor in race_competitors:
             race_info['participants'].append(get_competitor_info(race_number=race_number, user_id=competitor[0], requester = user_id))
         race_info['participants_amount'] = len(race_info['participants'])
+    c.execute(
+        'select race_competitors_laps.tag, min(time_milliseconds) from race_competitors_laps INNER JOIN race_competitors ON race_competitors_laps.tag = race_competitors.tag where race_competitors_laps.race_number = %s group by race_competitors_laps.tag order by min(time_milliseconds)',
+        (race_number, )
+    )
+    competitors_rank = c.fetchall()
+    race_info['rank'] = str(competitors_rank)
     return race_info
 
 def get_competitor_info(race_number, user_id, requester):
