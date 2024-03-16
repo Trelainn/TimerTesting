@@ -277,7 +277,7 @@ def participant():
             if competitor_by_tag is None and competitor_by_user is None:
                 c.execute(
 					'insert into race_competitors (race_number, tag, nickname, user_id, toy, gender, weight_category, video_permission, participant_id) values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', 
-					(status['current_race_number'], tag, nickname, user_id, toy, gender, weight_category, video_permission, participant_id)
+					(status['current_race_number'], tag, nickname, user_id, toy, gender, weight_category, video_permission, str(participant_id))
 				)
                 db.commit()
                 return {'ok': True, 'status': 'success', 'process': 'Participant', 'participant': {
