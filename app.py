@@ -201,7 +201,7 @@ def reset_system_parameters():
 def race():
     status = get_system_parameters()
     try:
-        if status['race_status'] == 'no race' and 'user_id' in request.json():
+        if status['race_status'] == 'no race' and 'user_id' in request.json:
             user_id = request.json['user_id']
             race_code = ''.join(random.choice(string.ascii_uppercase) for x in range(4))
             race_number = status['next_race_number']
