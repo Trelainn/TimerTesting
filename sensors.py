@@ -44,7 +44,7 @@ def readSerial():
                         "LED_Status": led_status
                         }
                 requests.post("http://localhost:8080/update_status", json=data)
-                if data['System_Shut_Down'] == True:
+                if data['System_Shut_Down'] or data['Button_Pressed']:
                     print('OFF')
                     os.system('shutdown now')
                 #print(response)
