@@ -478,10 +478,11 @@ def update_wifi_network():
 
 @app.route('/close_past_races', methods=['POST'])
 def close_past_races():
+    status = get_system_parameters()
     db, c = get_db()
     try:
         c.execute(
-            'update races set race_status = %s where race_status <> %s', ("finished", "finished")
+            'update races set race_status = %s where race_status <> %s', ('finished', 'finished')
         )
         db.commit()
         update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ', code=' ')
