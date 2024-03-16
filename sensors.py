@@ -57,9 +57,11 @@ def registerInNetwork():
 
 def checkStatus():
     global times
+    global lap_threshold
     while True:
         response = requests.get('http://localhost:8080/system_parameters')
-        status['race_status'] = response.json()['race_status']
+        status['race_status'] = response.json['race_status']
+        lap_threshold = response.json['lap_threshold']
         if status['race_status'] == 'racing':
             if camera.get_camera_on() == False:
                 camera.start_camera()
@@ -128,58 +130,18 @@ def saveLapTime(tag, time_recorded, video):
         if response.json()['video_permission']:
             camera.create_video(video, response.json()['video_name'])
 
+def closePastRaces():
+    requests.post("http://localhost:8080/close_past_races/")
+
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(12, GPIO.OUT)
     GPIO.output(12, True)
     serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.5)
+    Thread(target=closePastRaces, args=()).start()
     Thread(target=readSerial, args=()).start()
     register_in_network = Thread(target=registerInNetwork, args=()).start()
     Thread(target=checkStatus, args=()).start()
     Thread(target=checkInternetConnection, args=()).start()
     Thread(target=updateWifiList, args=()).start()
     Thread(target=readRFID, args=()).start()
-'''
-
-camera.start_camera()
-
-time.sleep(5)
-
-Thread(target=camera.create_video, args=(camera.buffer, 'Test1')).start()
-
-time.sleep(2)
-
-Thread(target=camera.create_video, args=(camera.buffer, 'Test2')).start()
-
-camera.stop_camera()
-time.sleep(3)
-camera.create_camera(image_width=1920, image_height=1280, fps=20)
-#amera.create_camera()#image_width=640, image_height=480, fps=30)
-camera.start_camera()
-time.sleep(5)
-
-Thread(target=camera.create_video, args=(camera.buffer, 'Test3')).start()
-Thread(target=camera.create_video, args=(camera.buffer, 'Test4')).start()
-Thread(target=camera.create_video, args=(camera.buffer, 'Test5')).start()
-
-print('Finished')
-
-time.sleep(1)
-
-camera.system_on = False
-'''
-
-'''
-def post_test(req):
-    response = req.post("http://192.168.1.65:8080/update_status", json={'temperature': 25})
-    print(response)
-    print(response.json())
-    print(response.status_code)
-
-session = requests.Session()
-now = datetime.datetime.now()
-print('Begin')
-post_test(session)
-print(datetime.datetime.now()-now)
-
-'''
