@@ -316,7 +316,7 @@ def participant():
             weight_category = request.json['weight_category']
             toy = request.json['toy']
             tag = request.json['tag']
-            video_permission = False if user_id[:5].str.lower() == 'guest' else True
+            video_permission = False if user_id[:5].lower() == 'guest' else True
             participant_id = uuid.uuid4()
             db, c = get_db()
             c.execute('select * from race_competitors where race_number = %s and user_id = %s',(status['current_race_number'], user_id))
