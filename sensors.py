@@ -63,6 +63,7 @@ def checkStatus():
         status['race_status'] = response.json['race_status']
         lap_threshold = response.json['lap_threshold']
         if status['race_status'] == 'racing':
+            requests.get('http://localhost:8080/race')
             if camera.get_camera_on() == False:
                 camera.start_camera()
         else:
@@ -125,13 +126,14 @@ def readRFID():
 
 def saveLapTime(tag, time_recorded, video):
     response=requests.post("http://localhost:8080/record_time/", json={'tag': str(tag), 'time': str(time_recorded)})
-    print (response.json())
+    print (response.json)
     if response.json()['ok']:
-        if response.json()['video_permission']:
+        if response.json['video_permission']:
             camera.create_video(video, response.json()['video_name'])
 
 def closePastRaces():
-    requests.post("http://localhost:8080/close_past_races/")
+    message = requests.post("http://localhost:8080/close_past_races/")
+    print (message)
 
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BOARD)
