@@ -573,7 +573,7 @@ def saved_video():
     lap_number = int(request.json['lap_number'])
     try:
         db, c = get_db()
-        c.execute('update race_competitors_laps set video_available = %s where tag = %s and race_number = %s and lap_number = %s', (True, tag, race_number, lap_number))
+        c.execute('update race_competitors_laps set video_available = %s where tag = %s and race_number = %s and lap = %s', (True, tag, race_number, lap_number))
         db.commit()
         return {'ok': True, 'process': 'Video Saved', 'status': 'success', 'race_number': race_number, 'tag': tag, 'lap_number': lap_number}
     except Exception as e: 
