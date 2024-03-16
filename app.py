@@ -197,6 +197,27 @@ def reset_system_parameters():
     update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ', code=' ')
     return get_system_parameters()
 
+@app.route('/race', methods=['POST'])
+def race():
+    status = get_system_parameters()
+    try:
+        if status['race_status'] == 'no race' and 'user_id' in request.json():
+            user_id = request.json['user_id']
+            race_code = ''.join(random.choice(string.ascii_uppercase) for x in range(4))
+            race_number = status['next_race_number']
+            race_status = 'configure_race'
+            db, c = get_db()
+            c.execute(
+                'insert into races (race_number, user_id, code, race_status) values (%s, %s, %s, %s)', (race_number , user_id, race_code, race_status)
+			)
+            update_system_parameters(race_number=race_number+1, race_status=race_status, user_id=user_id, code=race_code)
+            db.commit()
+            return {'ok': True, 'process': 'Start race', 'status': 'success', 'race_number': race_number}
+        else:
+            return {'ok': False, 'process': 'Start race', 'status': 'failed', 'error': 'race already created'}
+    except Exception as e: 
+        return {'ok': False, "error": str(e)}    
+
 @app.route('/create_race', methods=['POST'])
 def create_race():
     status = get_system_parameters()
