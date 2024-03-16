@@ -566,6 +566,19 @@ def record_time():
     except Exception as e: 
         return {'ok': False, "error": str(e), "participant": participant}     
 
+@app.route('/saved_video', methods=['POST'])
+def saved_video():
+    tag = request.json['tag']
+    race_number = request.json['race_number']
+    lap_number = request.json['lap_number']
+    try:
+        db, c = get_db()
+        c.execute('update race_competitors_laps set video_available = %s where tag = %s and race_number = %s and lap_number = %s', (True, tag, race_number, lap_number))
+        db.commit()
+        return {'ok': True, 'process': 'Video Saved', 'status': 'success', 'race_number': race_number, 'tag': tag, 'lap_number': lap_number}
+    except Exception as e: 
+        return {'ok': False, "error": str(e), "participant": participant}     
+
 @app.route('/stop_race', methods=['POST'])
 def stop_race():
     status = get_system_parameters()
@@ -609,7 +622,7 @@ def view_participants():
         pass
     return participants
 
-@app.route('/video/', methods=['POST'])
+@app.route('/video', methods=['POST'])
 def video(race_number, tag, lap, user_id):
     video_info = get_video_info(race_number=race_number, tag=tag, lap=lap, user_id=user_id)
     if video_info['video_available']:
