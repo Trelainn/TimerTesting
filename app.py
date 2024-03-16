@@ -358,8 +358,10 @@ def participant_photo(participant_id):
     status = get_system_parameters()
     c.execute('select photo from race_competitors where race_number = %s and participant_id = %s',(status['current_race_number'], participant_id))
     participant_photo = c.fetchone()
-    if participant_photo is not None:
-        return {'ok': False, 'status': 'failed', 'process': 'Add Participant Photo', 'error': 'User already has a photo in the race'}
+    if participant_photo is None:
+        return {'ok': False, 'status': 'failed', 'process': 'Participant Photo', 'error': 'User is not registered in the race'}
+    if participant_photo[0] == True:
+        return {'ok': False, 'status': 'failed', 'process': 'Participant Photo', 'error': 'User already has a photo in the race'}
     try:
         if status['race_status'] == 'configure_race':
             if 'image' not in request.files:
@@ -376,7 +378,7 @@ def participant_photo(participant_id):
                         (True, status['current_race_number'], participant_id)
                     )
                     db.commit()
-                    return {'ok': True, 'participant_id': participant_id, 'photo_url': url_for('profile_picture', race_number=status['current_race_number'], participant_id=participant_id)}
+                    return {'ok': True, 'process': 'Participant Photo', 'participant_id': participant_id, 'photo_url': url_for('profile_picture', race_number=status['current_race_number'], participant_id=participant_id)}
                 except Exception as e:
                     return {'ok': False, 'error': 'The file could not be saved due to the following error: '+str(e)}
     except Exception as e: 
