@@ -525,7 +525,7 @@ def start_race():
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
 
-@app.route('/record_time/', methods=['POST'])
+@app.route('/record_time', methods=['POST'])
 def record_time():
     tag = request.json['tag']
     time = request.json['time']
