@@ -306,7 +306,7 @@ def participant_put(participant_id):
         tag = request.json['tag']
         photo = request.json['photo']
         c.execute(
-            'update race_competitors set nickname = %s, toy = %s tag = %s where race_number = %s and participant_id = %s', 
+            'update race_competitors set nickname = %s, toy = %s, tag = %s where race_number = %s and participant_id = %s', 
             (nickname, toy, tag, status['current_race_number'], participant_id)
         )
         db.commit()
