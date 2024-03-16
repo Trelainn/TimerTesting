@@ -577,7 +577,7 @@ def saved_video():
         db.commit()
         return {'ok': True, 'process': 'Video Saved', 'status': 'success', 'race_number': race_number, 'tag': tag, 'lap_number': lap_number}
     except Exception as e: 
-        return {'ok': False, "error": str(e), "participant": participant}     
+        return {'ok': False, "error": str(e)}     
 
 @app.route('/stop_race', methods=['POST'])
 def stop_race():
