@@ -484,6 +484,7 @@ def close_past_races():
             'update races set race_status = %s where race_status <> %s', ("finished", "finished")
         )
         db.commit()
+        update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ', code=' ')
         return {'ok': True}
     except Exception as e:
         return {'ok': False, "error": str(e)}   
