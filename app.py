@@ -76,7 +76,7 @@ def get_race_info(race_number, user_id):
     race_info['id'] = race_number
     if race is not None:
         race_info['creator'] = race[1]
-        if race[2] == 'configure race':
+        if race[2] == 'configure_race':
             race_info['status'] = 'configuring'
         elif race[2] == 'racing':
             race_info['status'] = 'started'
