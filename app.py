@@ -151,7 +151,7 @@ def get_laps_info(race_number, tag, video_permission, user_id, participant_id):
             if lap['time'] < competitor_laps_info['best_time'] or competitor_laps_info['best_time'] == -1:
                 competitor_laps_info['best_time'] = lap['time']
                 #competitor_laps_info['best_lap'] =  lap['lap']
-            if video_permission:
+            if video_permission and competitor_lap[7]:
                 #lap['video_name'] = competitor_lap[4]
                 lap['videoLink'] = url_for('video', race_number=race_number, tag=tag, lap=competitor_lap[2], user_id=user_id)
             #lap['info_uploaded'] = competitor_lap[5]
