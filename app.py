@@ -111,7 +111,7 @@ def get_race_info(race_number, user_id):
             min_lap = c.fetchone()
             if min_lap is not None:
                 if min_lap == race_info['expectedLaps']:
-                    requests.post("http://localhost:8080/race/", json={'stop_race': True, 'user_id': race_info['creator']})
+                    requests.post("http://localhost:8080/race", json={'stop_race': True, 'user_id': race_info['creator']})
         race_info['participants_amount'] = len(race_info['participants'])
     return race_info
 
