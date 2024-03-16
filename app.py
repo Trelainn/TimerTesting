@@ -243,13 +243,13 @@ def race():
         if status['race_owner'] == request.json['user_id']:
             if 'track' in request.json:
                 c.execute(
-                    'update races set track = %s where race_number = %s', (request.json['track'], status['next_race_number']-1)
+                    'update races set track = %s where race_number = %s', (request.json['track'], status['current_race_number'])
                 )
                 db.commit()
                 return {'ok': True, 'process': 'Select track', 'status': 'success'} 
             elif 'race_type' in request.json and 'limit_number' in request.json:
                 c.execute(
-                    'update races set race_type = %s, limit_number = %s where race_number = %s', (request.json['race_type'], request.json['limit_number'], status['next_race_number']-1)
+                    'update races set race_type = %s, limit_number = %s where race_number = %s', (request.json['race_type'], request.json['limit_number'], status['current_race_number'])
                 )
                 db.commit()
                 return {'ok': True, 'process': 'Race type', 'status': 'success'}
