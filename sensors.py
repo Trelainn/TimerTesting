@@ -130,6 +130,7 @@ def saveLapTime(tag, time_recorded, video):
     if response.json()['ok']:
         if response.json()['video_permission']:
             camera.create_video(video, response.json()['video_name'])
+            requests.post("http://localhost:8080/saved_video", json={'tag': str(response.json()['tag']), 'race_number': str(response.json()['race_number']), 'lap_number': str(response.json()['lap_number'])})
 
 def closePastRaces():
     requests.post("http://localhost:8080/close_past_races")
