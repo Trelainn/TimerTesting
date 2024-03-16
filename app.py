@@ -4,12 +4,14 @@ from multiprocessing import Manager
 from os import environ 
 from pathlib import Path
 from datetime import datetime
+from datetime import timedelta
 from werkzeug.utils import secure_filename
 import string
 import random
 import time
 import os
 import uuid
+import requests
 
 app = Flask(__name__)
 wifi_list = []
@@ -50,9 +52,9 @@ def get_system_parameters():
     if system_paramters is not None:
         current_status['race_owner'] = system_paramters[2][1]
         current_status['race_status'] = system_paramters[3][1]
+        current_status['lap_threshold'] = system_paramters[4][1]
         current_status['next_race_number'] = int(system_paramters[0][1])
-        if current_status['race_status'] != 'no race':
-            current_status['current_race_number'] = current_status['next_race_number'] - 1
+        current_status['current_race_number'] = current_status['next_race_number'] - 1
     return current_status 
 
 def update_system_parameters(race_number, race_status, user_id):
@@ -90,8 +92,11 @@ def get_race_info(race_number, user_id):
             race_info['expectedTime'] = race[5]   
         if  race_info['status'] == 'finished':
             race_info['total_time'] = (race[7] - race[6]).seconds
-        if race[6] is not None:
+        if race_info['status'] == 'started':
             race_info['total_time'] = (datetime.now()-race[6]).seconds
+            if race_info['category'] == 'Time race':
+                if race_info['total_time'] > race_info['expectedTime']:
+                    requests.post("http://localhost:8080/race/", json={'stop_race': True, 'user_id': race_info['creator']})
             race_info['date'] = race[6]
         else:
             race_info['total_time'] = 0
@@ -100,6 +105,12 @@ def get_race_info(race_number, user_id):
         race_competitors = c.fetchall()
         for competitor in race_competitors:
             race_info['participants'].append(get_competitor_info(race_number=race_number, user_id=competitor[0], requester = user_id))
+        if race_info['category'] == 'Laps race':
+            c.execute('select max(lap) from race_competitors_laps where race_number = %s GROUP BY tag ORDER BY max asc', (race_number, ))
+            min_lap = c.fetchone()
+            if min_lap is not None:
+                if min_lap == race_info['expectedLaps']:
+                    requests.post("http://localhost:8080/race/", json={'stop_race': True, 'user_id': race_info['creator']})
         race_info['participants_amount'] = len(race_info['participants'])
     return race_info
 
@@ -256,7 +267,17 @@ def race():
         if status['race_owner'] == request.json['user_id'] and request.json['stop_race']:
             try:
                 c.execute(
-                    'update races set race_final_time = %s, race_status = %s where race_number = %s', (datetime.now(), 'finished', status['current_race_number'],)
+                    'select race_type, limit, race_begin_time from races where race_number = %s', (status['current_race_number'], ) 
+                )
+                race = c.fetchone()
+                race_type = race[0]
+                race_limit = race[1]
+                race_begin_time = race[2]
+                finish_time = datetime.now()
+                if race_type == 'Time race' and race_limit < (finish_time - race_begin_time).seconds:
+                    finish_time = race_begin_time + timedelta(seconds=race_limit)
+                c.execute(
+                    'update races set race_final_time = %s, race_status = %s where race_number = %s', (finish_time, 'finished', status['current_race_number'],)
                 )
                 db.commit()
                 update_system_parameters(race_number=status['next_race_number'], race_status='no race', user_id=' ')
@@ -268,7 +289,7 @@ def race():
 @app.route('/race', methods=['GET'])
 def race_get():
     status = get_system_parameters()
-    if status['race_status'] != 'no race' and 'user_id' in request.json:
+    if 'user_id' in request.json:
         return get_race_info(race_number=status['current_race_number'], user_id=request.json['user_id'])
     return {'ok': False} 
 
@@ -511,14 +532,16 @@ def record_time():
     try:
         if status['race_status'] == 'racing':
             db, c = get_db()
-            c.execute('select tag, video_permission from race_competitors where tag = %s and race_number = %s', (tag, status['current_race_number']))
+            c.execute('select video_permission, user_id from race_competitors where tag = %s and race_number = %s', (tag, status['current_race_number']))
             participant = c.fetchall()
             if participant != []:
-                video_permission = participant[0][1]
+                video_permission = participant[0][0]
+                user_id = participant[0][0]
             else:
                 return {'ok': False, "error": "tag not registered in race"} 
             c.execute('select lap from race_competitors_laps where tag = %s and race_number = %s order by lap desc', (tag, status['current_race_number']))
             lap_number = c.fetchone()
+            race = get_race_info(status['current_race_number'], user_id)
             if lap_number is not None:
                 lap_number = int(lap_number[0])+ 1
             else:
@@ -527,9 +550,17 @@ def record_time():
                 video_name = str(status['current_race_number'])+'_'+str(tag)+'_'+str(lap_number)
             else:
                 video_name = ''
-            c.execute('insert into race_competitors_laps (race_number, tag, lap, time_milliseconds) values (%s, %s, %s, %s)', (status['current_race_number'], tag, lap_number, time))
-            db.commit()
-            return {'ok': True, 'process': 'Record Time', 'status': 'success', 'race_number': status['current_race_number'], 'tag': tag, 'lap_number': lap_number, 'time':time, 'video_name': video_name, 'video_permission': video_permission}
+            if race['category'] == 'Laps race':
+                if lap_number <= race['expectedLaps']:
+                    c.execute('insert into race_competitors_laps (race_number, tag, lap, time_milliseconds) values (%s, %s, %s, %s)', (status['current_race_number'], tag, lap_number, time))
+                    db.commit()
+                    return {'ok': True, 'process': 'Record Time', 'status': 'success', 'race_number': status['current_race_number'], 'tag': tag, 'lap_number': lap_number, 'time':time, 'video_name': video_name, 'video_permission': video_permission}
+            elif race['category'] == 'Time race':
+                if race['total_time'] <= race['expectedTime']:
+                    c.execute('insert into race_competitors_laps (race_number, tag, lap, time_milliseconds) values (%s, %s, %s, %s)', (status['current_race_number'], tag, lap_number, time))
+                    db.commit()
+                return {'ok': True, 'process': 'Record Time', 'status': 'success', 'race_number': status['current_race_number'], 'tag': tag, 'lap_number': lap_number, 'time':time, 'video_name': video_name, 'video_permission': video_permission}
+            return {'ok': False, 'process': 'Record Time', 'status': 'failed', 'error': 'Out of limits'}
         return {'ok': False, 'process': 'Record Time', 'status': 'failed'}
     except Exception as e: 
         return {'ok': False, "error": str(e), "participant": participant}     
