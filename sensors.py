@@ -61,7 +61,7 @@ def checkStatus():
     while True:
         response = requests.get('http://localhost:8080/system_parameters')
         status['race_status'] = response.json()['race_status']
-        lap_threshold = response.json()['lap_threshold']
+        lap_threshold = int(response.json()['lap_threshold'])
         if status['race_status'] == 'racing':
             requests.get('http://localhost:8080/race')
             if camera.get_camera_on() == False:
