@@ -45,15 +45,15 @@ def get_current_status():
 def get_system_parameters():
     db, c = get_db()
     c.execute(
-        'select * from system_parameters order by id ASC'
+        'select next_race_number, race_owner, race_status, lap_threshold  from system_parameters order by id ASC'
     )
-    system_paramters = c.fetchall()
+    system_parameters = c.fetchall()
     current_status = {}
-    if system_paramters is not None:
-        current_status['race_owner'] = system_paramters[2][1]
-        current_status['race_status'] = system_paramters[3][1]
-        current_status['lap_threshold'] = system_paramters[4][1]
-        current_status['next_race_number'] = int(system_paramters[0][1])
+    if system_parameters is not None:
+        current_status['race_owner'] = system_parameters[1][1]
+        current_status['race_status'] = system_parameters[2][1]
+        current_status['lap_threshold'] = system_parameters[3][1]
+        current_status['next_race_number'] = int(system_parameters[0][1])
         current_status['current_race_number'] = current_status['next_race_number'] - 1
     return current_status 
 
