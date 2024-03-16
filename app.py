@@ -568,9 +568,9 @@ def record_time():
 
 @app.route('/saved_video', methods=['POST'])
 def saved_video():
-    tag = request.json['tag']
-    race_number = request.json['race_number']
-    lap_number = request.json['lap_number']
+    tag = str(request.json['tag'])
+    race_number = int(request.json['race_number'])
+    lap_number = int(request.json['lap_number'])
     try:
         db, c = get_db()
         c.execute('update race_competitors_laps set video_available = %s where tag = %s and race_number = %s and lap_number = %s', (True, tag, race_number, lap_number))
