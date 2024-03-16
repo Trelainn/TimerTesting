@@ -92,7 +92,7 @@ def get_race_info(race_number, user_id):
             race_info['expectedTime'] = race[5]   
         if  race_info['status'] == 'finished':
             race_info['total_time'] = (race[7] - race[6]).seconds
-        if race_info['status'] == 'started':
+        if race_info['status'] == 'started' or race_info['status'] == 'finished':
             race_info['total_time'] = (datetime.now()-race[6]).seconds
             if race_info['category'] == 'Time race':
                 if race_info['total_time'] > race_info['expectedTime']:
