@@ -9,6 +9,7 @@ import string
 import random
 import time
 import os
+import uuid
 
 app = Flask(__name__)
 wifi_list = []
@@ -263,52 +264,76 @@ def participant():
             toy = request.json['toy']
             tag = request.json['tag']
             video_permission = request.json['video_permission']
-            photo = request.json['photo']
+            participant_id = uuid.uuid4()
             db, c = get_db()
             c.execute('select * from race_competitors where race_number = %s and tag = %s',(status['current_race_number'], tag))
-            competitor = c.fetchone()
-            if competitor is None:
+            competitor_by_tag = c.fetchone()
+            if competitor_by_tag is not None:
+                return {'ok': False, 'status': 'failed', 'process': 'Add Participant', 'error': 'Tag is already used by another participant'}
+            c.execute('select * from race_competitors where race_number = %s and user_id = %s',(status['current_race_number'], user_id))
+            competitor_by_user = c.fetchone()
+            if competitor_by_user is not None:
+                return {'ok': False, 'status': 'failed', 'process': 'Add Participant', 'error': 'User is already registered in the race'}
+            if competitor_by_tag is None and competitor_by_user is None:
                 c.execute(
-					'insert into race_competitors (race_number, tag, nickname, user_id, toy, gender, weight_category, photo, video_permission) values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', 
-					(status['current_race_number'], tag, nickname, user_id, toy, gender, weight_category, photo, video_permission)
+					'insert into race_competitors (race_number, tag, nickname, user_id, toy, gender, weight_category, video_permission) values (%s, %s, %s, %s, %s, %s, %s, %s)', 
+					(status['current_race_number'], tag, nickname, user_id, toy, gender, weight_category, video_permission)
 				)
-                message = 'New participant added'
+                db.commit()
+                return {'ok': True, 'status': 'success', 'process': 'Add Participant', 'participant': {
+                    'participant_id': participant_id,
+                    'nickname': nickname,
+                    'user': user_id,
+                    'profilePictureURL': None,
+                    'toy': toy,
+                    'toyTag': tag}}
             else:
-                c.execute(
-					'update race_competitors set nickname = %s, user_id = %s, toy = %s, gender = %s, weight_category = %s, photo = %s, video_permission = %s where race_number = %s and tag = %s', 
-					(nickname, user_id, toy, gender, weight_category, photo, video_permission, status['current_race_number'], tag)
-				)
-                message = 'Participant updated'
-            db.commit()
-            return {'ok': True, 'status': 'success', 'process': 'Add Participant', 'message': message}
+                return {'ok': False, 'status': 'failed', 'process': 'Add Participant', 'error': 'An error ocurred'}
         else:
             return {'ok': False, 'process': 'Add Participant', 'status': 'failed'}
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
 
-@app.route('/participant_photo/<user_id>', methods=['POST'])
-def participant_photo(user_id):
+@app.route('/participant/<participant_id>', methods=['PUT'])
+def participant_put(participant_id):
+    nickname = request.json['nickname']
+    toy = request.json['toy']
+    tag = request.json['tag']
+    video_permission = request.json['video_permission']
+    photo = request.json['photo']
+    c.execute(
+        'update race_competitors set nickname = %s, toy = %s, photo = %s, video_permission = %s where race_number = %s and tag = %s', 
+        (nickname, user_id, toy, gender, weight_category, photo, video_permission, status['current_race_number'], tag)
+    )
+    message = 'Participant updated'
+
+@app.route('/participant_photo/<participant_id>', methods=['POST'])
+def participant_photo(participant_id):
+    db, c = get_db()
     status = get_system_parameters()
-    competitor = get_competitor_info(status['current_race_number'], user_id)
+    c.execute('select photo from race_competitors where race_number = %s and participant_id = %s',(status['current_race_number'], participant_id))
+    participant_photo = c.fetchone()
+    if participant_photo is not None:
+        return {'ok': False, 'status': 'failed', 'process': 'Add Participant Photo', 'error': 'User already has a photo in the race'}
     try:
         if status['race_status'] == 'configure_race':
-            if competitor['photo']:
-                if 'image' not in request.files:
-                    return {'ok': False, 'error': 'Wrong request'}
-                image = request.files['image']
-                if image.filename == '':
-                    return {'ok': False, 'error': 'Empty file'}
-                if image and allowed_file(image.filename):
-                    try:
-                        extension = image.filename.rsplit('.', 1)[1].lower()
-                        print(extension)
-                        image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(competitor['tag'])+'.'+extension)
-                        return {'ok': True}
-                    except Exception as e:
-                        return {'ok': False, 'error': 'The file could not be saved due to the following error: '+str(e)}
-            return {'ok': False, 'error': 'No photo allowed for this user'}
-        else:
-            return {'ok': False, 'error': 'Not configure_race', 'status': 'failed'}
+            if 'image' not in request.files:
+                return {'ok': False, 'error': 'Wrong file type'}
+            image = request.files['image']
+            if image.filename == '':
+                return {'ok': False, 'error': 'Empty file'}
+            if image and allowed_file(image.filename):
+                try:
+                    extension = image.filename.rsplit('.', 1)[1].lower()
+                    image.save(str(Path().absolute())+'/static/profile_pictures/'+str(status['current_race_number'])+'_'+str(participant_id)+'.'+extension)
+                    c.execute(
+                        'update race_competitors set photo = %s where race_number = %s and participant_id = %s', 
+                        (True, status['current_race_number'], participant_id)
+                    )
+                    db.commit()
+                    return {'ok': True, 'participant_id': participant_id, 'photo_url': url_for('profile_picture', race_number=status['current_race_number'], participant_id=participant_id)}
+                except Exception as e:
+                    return {'ok': False, 'error': 'The file could not be saved due to the following error: '+str(e)}
     except Exception as e: 
         return {'ok': False, "error": str(e)}     
 
@@ -414,10 +439,10 @@ def video(race_number, tag, lap, user_id):
             return Response("Server available", status=400,)
         return Response("No video available", status=403,)
 
-@app.route('/profile_picture/<race_number>/<tag>', methods=['GET'])
-def profile_picture(race_number, tag):
+@app.route('/profile_picture/<race_number>/<participant_id>', methods=['GET'])
+def profile_picture(race_number, participant_id):
     path = '/home/Trelainn/Documents/TimerTesting/static/profile_pictures/'
-    name = str(race_number) + '_' + str(tag)
+    name = str(race_number) + '_' + str(participant_id)
     files = []
     for file in os.listdir(path):
         files.append(file)
@@ -426,6 +451,7 @@ def profile_picture(race_number, tag):
             extension = image.rsplit('.', 1)[1].lower()
             return send_file(image, as_attachment=True, download_name=str(race_number)+'.'+extension)
     return {'ok': False}
+
 @app.route('/update_status', methods=['POST'])
 def update_status():
     db, c = get_db()
