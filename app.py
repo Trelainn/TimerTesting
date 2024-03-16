@@ -622,7 +622,7 @@ def view_participants():
         pass
     return participants
 
-@app.route('/video<race_number><tag><lap><user_id>', methods=['GET'])
+@app.route('/video/<race_number>/<tag>/<lap>/<user_id>', methods=['GET'])
 def video(race_number, tag, lap, user_id):
     try:
         video_info = get_video_info(race_number=race_number, tag=tag, lap=lap, user_id=user_id)
