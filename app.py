@@ -666,6 +666,16 @@ def update_status():
     db.commit()
     return {'ok': True} 
 
+@app.route('/update_lap_threshold', methods=['POST'])
+def update_lap_threshold():
+    db, c = get_db()
+    lap_threshold = request.json['lap_threshold']
+    c.execute(
+        'update system_parameters set value = %s where id = %s', (lap_threshold, 'lap_threshold')
+    )
+    db.commit()
+    return {'ok': True} 
+
 @app.route('/update_list_wifi_networks', methods=['POST'])
 def update_list_wifi_networks():
     global wifi_list
