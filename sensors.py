@@ -70,9 +70,9 @@ def checkStatus():
             if camera.get_camera_on() == True:
                 camera.stop_camera()
             times = {}
-        print(times)
-        print(lap_threshold)
-        print()
+        #print(times)
+        #print(lap_threshold)
+        #print()
         time.sleep(1)
 
 def checkInternetConnection():
