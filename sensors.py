@@ -69,7 +69,7 @@ def checkStatus():
         else:
             if camera.get_camera_on() == True:
                 camera.stop_camera()
-                times = {}
+            times = {}
         time.sleep(1)
 
 def checkInternetConnection():
