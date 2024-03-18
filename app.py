@@ -287,8 +287,8 @@ def race():
 @app.route('/race', methods=['GET'])
 def race_get():
     status = get_system_parameters()
-    if 'user_id' in request.json:
-        return get_race_info(race_number=status['current_race_number'], user_id=request.json['user_id'])
+    if 'user_id' in request.headers:
+        return get_race_info(race_number=status['current_race_number'], user_id=request.headers['user_id'])
     return {'ok': False} 
 
 @app.route('/create_race', methods=['POST'])
