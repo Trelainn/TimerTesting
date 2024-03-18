@@ -501,7 +501,8 @@ def participant_photo_delete(participant_id):
                         (False, status['current_race_number'], participant_id)
                     )
                     db.commit()
-                return {'ok': True, 'process': 'Participant Photo', 'participant_id': participant_id, 'photo_url': None}
+                    return {'ok': True, 'process': 'Participant Photo', 'participant_id': participant_id, 'photo_url': None}
+            return {'ok': False}
     except Exception as e: 
         return {'ok': False, "error": str(e)}  
 
