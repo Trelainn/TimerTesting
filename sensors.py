@@ -158,7 +158,7 @@ if __name__ == "__main__":
     serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.5)
     Thread(target=closePastRaces, args=()).start()
     Thread(target=readSerial, args=()).start()
-    Thread(target=writeLED, args=()).start()
+    #Thread(target=writeLED, args=()).start()
     register_in_network = Thread(target=registerInNetwork, args=()).start()
     Thread(target=checkStatus, args=()).start()
     Thread(target=checkInternetConnection, args=()).start()
