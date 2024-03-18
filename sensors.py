@@ -55,6 +55,10 @@ def readSerial():
                 print(reading)
             serialport.write(str.encode(chr(65+2)))
 
+def writeLED():
+    serialport.write(str.encode(chr(65+2)))
+    time.sleep(1)
+    serialport.write(str.encode(chr(65+2)))
 def registerInNetwork():
     network_registration.network_registration().register()
 
@@ -148,6 +152,7 @@ if __name__ == "__main__":
     serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.5)
     Thread(target=closePastRaces, args=()).start()
     Thread(target=readSerial, args=()).start()
+    Thread(target=writeLED, args=()).start()
     register_in_network = Thread(target=registerInNetwork, args=()).start()
     Thread(target=checkStatus, args=()).start()
     Thread(target=checkInternetConnection, args=()).start()
