@@ -146,10 +146,15 @@ def saveLapTime(tag, time_recorded, video):
 def closePastRaces():
     requests.post("http://localhost:8080/close_past_races")
     
-if __name__ == "__main__":
+def setGPIO():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(12, GPIO.OUT)
+    GPIO.output(12, False)
+    time.sleep(1)
     GPIO.output(12, True)
+
+if __name__ == "__main__":
+    Thread(target=setGPIO, args=()).start()
     serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.5)
     Thread(target=closePastRaces, args=()).start()
     Thread(target=readSerial, args=()).start()
