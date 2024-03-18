@@ -3,7 +3,9 @@ import serial
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(12, GPIO.OUT)
-GPIO.output(12, True)
+GPIO.output(12, False)
+
+'''
 serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.01)
 serialport.write(str.encode(chr(65+7)))
 
@@ -27,3 +29,4 @@ while True:
         print(data)
     except:
        print(reading)
+'''
