@@ -23,7 +23,6 @@ lap_threshold = 20
 
 def readSerial():
     time.sleep(1)
-    serialport.write(str.encode(chr(65+2)))
     while True:
         reading = serialport.readlines()
         if reading:
@@ -55,6 +54,7 @@ def readSerial():
                 #print(data)
             except:
                 print(reading)
+            serialport.write(str.encode(chr(65+2)))
 
 def registerInNetwork():
     network_registration.network_registration().register()
