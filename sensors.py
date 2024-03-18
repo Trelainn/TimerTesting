@@ -22,7 +22,6 @@ times = {}
 lap_threshold = 20
 
 def readSerial():
-    time.sleep(1)
     while True:
         reading = serialport.readlines()
         if reading:
