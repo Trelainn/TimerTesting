@@ -75,7 +75,7 @@ def get_race_info(race_number, user_id):
     c.execute('select * from races where race_number = %s', (race_number, ))
     race = c.fetchone()
     race_info = {}
-    race_info['id'] = race_number
+    race_info['id'] = str(race_number)
     if race is not None:
         race_info['creator'] = race[1]
         if race[2] == 'configure_race':
