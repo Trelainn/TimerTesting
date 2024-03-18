@@ -145,6 +145,7 @@ if __name__ == "__main__":
     GPIO.setup(12, GPIO.OUT)
     GPIO.output(12, True)
     serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.5)
+    serialport.write(str.encode(chr(65+2)))
     Thread(target=closePastRaces, args=()).start()
     Thread(target=readSerial, args=()).start()
     register_in_network = Thread(target=registerInNetwork, args=()).start()
