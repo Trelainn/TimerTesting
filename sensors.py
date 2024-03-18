@@ -47,7 +47,7 @@ def readSerial():
                 requests.post("http://localhost:8080/update_status", json=data)
                 if data['System_Shut_Down']:
                     print('OFF')
-                    #os.system('shutdown now')
+                    os.system('shutdown now')
                     print('Bye')
                 #print(response)
                 #print(data)
@@ -59,7 +59,7 @@ def writeLED():
     serialport.write(str.encode(chr(65+2)))
     time.sleep(1)
     serialport.write(str.encode(chr(65+2)))
-
+    
 def registerInNetwork():
     network_registration.network_registration().register()
 
