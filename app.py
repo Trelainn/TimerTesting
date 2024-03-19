@@ -656,6 +656,7 @@ def profile_picture(race_number, participant_id):
 def update_status():
     db, c = get_db()
     status = get_system_parameters()
+    return request.json
     temperature = request.json['Temperature']
     battery_percentage = request.json['Voltage_C1'] + request.json['Voltage_C2'] + request.json['Voltage_C3'] + request.json['Voltage_C4']
     pcb_connection = request.json['Raspberry_Connected']
