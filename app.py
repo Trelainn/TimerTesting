@@ -133,6 +133,7 @@ def get_competitor_info(race_number, user_id, requester):
         competitor_info['nickname'] = competitor[2]
         competitor_info['participant_id'] = competitor[9]
         competitor_info['toy'] = competitor[4]
+        competitor_info['rank'] = -1
         #competitor_info['gender'] = competitor[5]
         #competitor_info['weight_category'] = competitor[6]
         #competitor_info['photo'] = competitor[7]
