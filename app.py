@@ -213,6 +213,7 @@ def allowed_file(filename):
 
 @app.route('/status', methods=['GET'])
 def status():
+    return res
     return get_current_status()
 
 @app.route('/system_parameters', methods=['GET'])
@@ -654,9 +655,10 @@ def profile_picture(race_number, participant_id):
 
 @app.route('/update_status', methods=['POST'])
 def update_status():
+    global res
     db, c = get_db()
     status = get_system_parameters()
-    return request.json
+    res = request.json
     temperature = request.json['Temperature']
     battery_percentage = request.json['Voltage_C1'] + request.json['Voltage_C2'] + request.json['Voltage_C3'] + request.json['Voltage_C4']
     pcb_connection = request.json['Raspberry_Connected']
