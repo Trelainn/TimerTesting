@@ -671,7 +671,7 @@ def update_status():
     led_status = request.json['LED_Status']
     c.execute(
         'insert into system_tracker (date, battery_percentage, temperature, race_status, race_number, camera_on, antenna_on, pcb_connection, internet_available, led_status, charger_connected, starting_system, system_shut_down) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', 
-        (datetime.now(),battery_percentage, temperature, status['race_status'], status['next_race_number'], camera_on, antenna_on, pcb_connection, internet_available, led_status, charger_connected, starting_system, system_shut_down)
+        (datetime.now(),battery_percentage, temperature, status['race_status'][0:9], status['next_race_number'], camera_on, antenna_on, pcb_connection, internet_available, led_status[0:9], charger_connected, starting_system, system_shut_down)
     )
     db.commit()
     return {'ok': True} 
