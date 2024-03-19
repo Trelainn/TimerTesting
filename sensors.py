@@ -72,10 +72,10 @@ def checkStatus():
         lap_threshold = int(response.json()['lap_threshold'])
         if status['race_status'] == 'racing':
             requests.get('http://localhost:8080/race')
-            if camera.get_camera_on() == False:
+            if (camera.get_camera_on() == False):
                 camera.start_camera()
         else:
-            if camera.get_camera_on() == True:
+            if (camera.get_camera_on()):
                 camera.stop_camera()
             times = {}
         #print(times)
