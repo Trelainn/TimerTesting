@@ -660,7 +660,7 @@ def update_status():
     status = get_system_parameters()
     res = request.json
     temperature = request.json['Temperature']
-    battery_percentage = request.json['Voltage_C1'] + request.json['Voltage_C2'] + request.json['Voltage_C3'] + request.json['Voltage_C4']
+    battery_percentage = round(request.json['Voltage_C1'] + request.json['Voltage_C2'] + request.json['Voltage_C3'] + request.json['Voltage_C4'], 2)
     pcb_connection = request.json['Raspberry_Connected']
     starting_system = request.json['Starting_System']
     system_shut_down = request.json['System_Shut_Down']
