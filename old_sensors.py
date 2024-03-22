@@ -173,7 +173,7 @@ def setGPIO():
 if __name__ == "__main__":
     serialport = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0-port0", 9600, timeout=0.5)
     serialport_RFID = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0-port0", 9600, timeout=0.01)
-    Thread(target=readSerial, args=()).start()
+    #Thread(target=readSerial, args=()).start()
     Thread(target=closePastRaces, args=()).start()
     Thread(target=writeLED, args=()).start()
     Thread(target=registerInNetwork, args=()).start()
