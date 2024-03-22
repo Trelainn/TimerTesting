@@ -23,6 +23,7 @@ times = {}
 lap_threshold = 20
 
 def readSerial():
+    global serialport
     serialport = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0-port0", 9600, timeout=0.5)
     while True:
         reading = serialport.readlines()
@@ -176,7 +177,7 @@ def setGPIO():
     GPIO.output(12, True)
 
 if __name__ == "__main__":
-    Thread(target=readSerial, args=()).start()
+    #Thread(target=readSerial, args=()).start()
     Thread(target=readRFID, args=()).start()
     Thread(target=closePastRaces, args=()).start()
     Thread(target=writeLED, args=()).start()
