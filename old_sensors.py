@@ -154,16 +154,18 @@ def setGPIO():
     GPIO.output(12, True)
 
 if __name__ == "__main__":
-    Thread(target=setGPIO, args=()).start()
+    #Thread(target=setGPIO, args=()).start()
     try:
-        serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.5)
-        Thread(target=readSerial, args=()).start()
+        #serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.5)
+        #Thread(target=readSerial, args=()).start()
+        pass
     except Exception as e:
-        print(e)
-    Thread(target=closePastRaces, args=()).start()
+        #print(e)
+        pass
+    #Thread(target=closePastRaces, args=()).start()
     #Thread(target=writeLED, args=()).start()
     register_in_network = Thread(target=registerInNetwork, args=()).start()
-    Thread(target=checkStatus, args=()).start()
-    Thread(target=checkInternetConnection, args=()).start()
-    Thread(target=updateWifiList, args=()).start()
-    Thread(target=readRFID, args=()).start()
+    #Thread(target=checkStatus, args=()).start()
+    #Thread(target=checkInternetConnection, args=()).start()
+    #Thread(target=updateWifiList, args=()).start()
+    #Thread(target=readRFID, args=()).start()
