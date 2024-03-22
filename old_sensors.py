@@ -14,6 +14,7 @@ camera = camera.Camera()
 camera.create_camera(image_width=1280, image_height=720, fps=20)
 camera.stop_camera()
 serialport = None
+serialport_RFID = None
 internet_available = False
 antenna_on = False
 led_status = 'Starting'
@@ -44,7 +45,10 @@ def readSerial():
                         "LED_Status": led_status
                         }
                 print(data)
-                requests.post("http://localhost:8080/update_status", json=data)
+                try:
+                    requests.post("http://localhost:8080/update_status", json=data)
+                except:
+                    pass
                 if data['System_Shut_Down']:
                     print('OFF')
                     os.system('shutdown now')
@@ -67,20 +71,23 @@ def checkStatus():
     global times
     global lap_threshold
     while True:
-        response = requests.get('http://localhost:8080/system_parameters')
-        status['race_status'] = response.json()['race_status']
-        lap_threshold = int(response.json()['lap_threshold'])
-        if status['race_status'] == 'racing':
-            requests.get('http://localhost:8080/race')
-            if (camera.get_camera_on() == False):
-                camera.start_camera()
-        else:
-            if (camera.get_camera_on()):
-                camera.stop_camera()
-            times = {}
-        #print(times)
-        #print(lap_threshold)
-        #print()
+        try:
+            response = requests.get('http://localhost:8080/system_parameters')
+            status['race_status'] = response.json()['race_status']
+            lap_threshold = int(response.json()['lap_threshold'])
+            if status['race_status'] == 'racing':
+                requests.get('http://localhost:8080/race')
+                if (camera.get_camera_on() == False):
+                    camera.start_camera()
+            else:
+                if (camera.get_camera_on()):
+                    camera.stop_camera()
+                times = {}
+            #print(times)
+            #print(lap_threshold)
+            #print()
+        except:
+            pass
         time.sleep(1)
 
 def checkInternetConnection():
@@ -90,6 +97,7 @@ def checkInternetConnection():
             response = requests.get("https://www.google.com")
             internet_available = True if (response.status_code == 200) else False
         except:
+            internet_available = False
             pass
         #print(response.status_code)
         time.sleep(60)
@@ -97,28 +105,31 @@ def checkInternetConnection():
 def updateWifiList():
     global register_in_network
     while True:
-        change_wifi_newtwork = requests.get('http://localhost:8080/update_wifi_network').json()
-        if change_wifi_newtwork['change'] == True:
-            ssid = change_wifi_newtwork['SSID']
-            password = change_wifi_newtwork['Password']
-            if change_wifi_newtwork['Hotspot'] == True:
-                wifi_management.hotspot(ssid, password)
-            else:
-                wifi_management.connect(ssid, password)
-            register_in_network.stop()
-            register_in_network = Thread(target=registerInNetwork, args=()).start()
-        requests.post("http://localhost:8080/update_list_wifi_networks", json=wifi_management.list_wifi_networks())
+        try:
+            change_wifi_newtwork = requests.get('http://localhost:8080/update_wifi_network').json()
+            if change_wifi_newtwork['change'] == True:
+                ssid = change_wifi_newtwork['SSID']
+                password = change_wifi_newtwork['Password']
+                if change_wifi_newtwork['Hotspot'] == True:
+                    wifi_management.hotspot(ssid, password)
+                else:
+                    wifi_management.connect(ssid, password)
+                register_in_network.stop()
+                register_in_network = Thread(target=registerInNetwork, args=()).start()
+            requests.post("http://localhost:8080/update_list_wifi_networks", json=wifi_management.list_wifi_networks())
+        except:
+            pass
         time.sleep(15)
 
 def readRFID():
-    serialport = serial.Serial("/dev/ttyUSB0", 9600, timeout=0.01)
     while True:
         if status['race_status'] == 'racing':
-            reading = serialport.readlines()
+            reading = serialport_RFID.readlines()
             if reading:
                 tag = reading[0].decode().split('\r')[0]
                 if tag == 'CONNECTED':
                     status['antenna_on'] = True
+                print(tag)
                 tag_read = tag[2:]
                 time_now = datetime.datetime.now()
                 try:
@@ -136,15 +147,20 @@ def readRFID():
             time.sleep(1)
 
 def saveLapTime(tag, time_recorded, video):
-    response=requests.post("http://localhost:8080/record_time", json={'tag': str(tag), 'time': str(time_recorded)})
-    print (response.json())
-    if response.json()['ok']:
-        if response.json()['video_permission']:
-            camera.create_video(video, response.json()['video_name'])
-            requests.post("http://localhost:8080/saved_video", json={'tag': str(response.json()['tag']), 'race_number': str(response.json()['race_number']), 'lap_number': str(response.json()['lap_number'])})
-
+    try:
+        response=requests.post("http://localhost:8080/record_time", json={'tag': str(tag), 'time': str(time_recorded)})
+        print (response.json())
+        if response.json()['ok']:
+            if response.json()['video_permission']:
+                camera.create_video(video, response.json()['video_name'])
+                requests.post("http://localhost:8080/saved_video", json={'tag': str(response.json()['tag']), 'race_number': str(response.json()['race_number']), 'lap_number': str(response.json()['lap_number'])})
+    except:
+        pass
 def closePastRaces():
-    requests.post("http://localhost:8080/close_past_races")
+    try:
+        requests.post("http://localhost:8080/close_past_races")
+    except:
+        pass
     
 def setGPIO():
     GPIO.setmode(GPIO.BOARD)
@@ -154,18 +170,13 @@ def setGPIO():
     GPIO.output(12, True)
 
 if __name__ == "__main__":
-    #Thread(target=setGPIO, args=()).start()
-    try:
-        #serialport = serial.Serial("/dev/ttyS0", 9600, timeout=0.5)
-        #Thread(target=readSerial, args=()).start()
-        pass
-    except Exception as e:
-        #print(e)
-        pass
-    #Thread(target=closePastRaces, args=()).start()
-    #Thread(target=writeLED, args=()).start()
-    register_in_network = Thread(target=registerInNetwork, args=()).start()
-    #Thread(target=checkStatus, args=()).start()
-    #Thread(target=checkInternetConnection, args=()).start()
-    #Thread(target=updateWifiList, args=()).start()
-    #Thread(target=readRFID, args=()).start()
+    serialport = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.2:1.0-port0", 9600, timeout=0.5)
+    serialport_RFID = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0-port0", 9600, timeout=0.01)
+    Thread(target=readSerial, args=()).start()
+    Thread(target=closePastRaces, args=()).start()
+    Thread(target=writeLED, args=()).start()
+    Thread(target=registerInNetwork, args=()).start()
+    Thread(target=checkStatus, args=()).start()
+    Thread(target=checkInternetConnection, args=()).start()
+    Thread(target=updateWifiList, args=()).start()
+    Thread(target=readRFID, args=()).start()
