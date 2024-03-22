@@ -182,7 +182,7 @@ if __name__ == "__main__":
     Thread(target=readSerial, args=()).start()
     Thread(target=readRFID, args=()).start()
     Thread(target=closePastRaces, args=()).start()
-    Thread(target=writeLED, args=()).start()
+    #Thread(target=writeLED, args=()).start()
     Thread(target=registerInNetwork, args=()).start()
     Thread(target=checkStatus, args=()).start()
     Thread(target=checkInternetConnection, args=()).start()
