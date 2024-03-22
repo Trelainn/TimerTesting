@@ -126,12 +126,12 @@ def updateWifiList():
 def readRFID():
     #serialport_RFID = serial.Serial("/dev/ttyACM0", 9600, timeout=0.01)
     #serialport_RFID = serial.Serial("/dev/ttyUSB0", 9600, timeout=0.01)
-    serialport_RFID = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0-port0", 9600, timeout=0.01)
+    serialport = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0-port0", 9600, timeout=0.01)
     while True:
-        reading = serialport_RFID.readlines()
+        reading = serialport.readlines()
         if reading:
             if status['race_status'] == 'racing':
-                reading = serialport_RFID.readlines()
+                reading = serialport.readlines()
                 if reading:
                     print(reading)
                     tag = reading[0].decode().replace('\r', '').replace('\n','')
@@ -151,7 +151,7 @@ def readRFID():
                             times[tag] = time_now
                     except Exception as e:
                         print(e)
-                serialport_RFID.reset_input_buffer()
+                serialport.reset_input_buffer()
             else:
                 time.sleep(1)
 
