@@ -127,6 +127,8 @@ def updateWifiList():
 def readRFID():
     #serialport = serial.Serial("/dev/ttyACM0", 9600, timeout=0.01)
     #serialport = serial.Serial("/dev/ttyUSB0", 9600, timeout=0.01)
+    time.sleep(1)
+    print('trying')
     serialport_RFID = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0-port0", 9600, timeout=0.01)
     while True:
         reading = serialport_RFID.readlines()
