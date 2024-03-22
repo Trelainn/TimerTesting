@@ -181,7 +181,7 @@ def setGPIO():
     GPIO.output(12, True)
 
 if __name__ == "__main__":
-    Thread(target=readSerial, args=()).start()
+    #Thread(target=readSerial, args=()).start()
     Thread(target=readRFID, args=()).start()
     Thread(target=closePastRaces, args=()).start()
     #Thread(target=writeLED, args=()).start()
