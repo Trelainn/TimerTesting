@@ -150,6 +150,7 @@ def readRFID():
                             times[tag] = time_now
                     except Exception as e:
                         print(e)
+                serialport_RFID.reset_input_buffer()
             else:
                 time.sleep(1)
 
