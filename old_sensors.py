@@ -44,7 +44,8 @@ def readSerial():
                         "Internet_Available": internet_available, 
                         "LED_Status": led_status
                         }
-                print(data)
+                #print(data)
+                print("Motherboard OK")
                 try:
                     requests.post("http://localhost:8080/update_status", json=data)
                 except:
