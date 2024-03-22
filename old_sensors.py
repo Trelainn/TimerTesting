@@ -123,6 +123,45 @@ def updateWifiList():
         time.sleep(15)
 
 def readRFID():
+    serialport = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0-port0", 9600, timeout=0.01)
+    while True:
+        reading = serialport.readlines()
+        if reading:
+            try:
+                
+                for read in reading:
+                    pass
+                print(read)
+                data = {"Temperature": float(reading[1].decode().replace('\r', '').replace('\n','')), 
+                        "Voltage_C1": float(reading[3].decode().replace('\r', '').replace('\n','')),
+                        "Voltage_C2": float(reading[5].decode().replace('\r', '').replace('\n','')),
+                        "Voltage_C3": float(reading[7].decode().replace('\r', '').replace('\n','')),
+                        "Voltage_C4": float(reading[9].decode().replace('\r', '').replace('\n','')),
+                        "Voltage_Charger": float(reading[11].decode().replace('\r', '').replace('\n','')),
+                        "Button_Pressed": True if int(reading[13].decode().replace('\r', '').replace('\n','')) == 1 else False,
+                        "Raspberry_Connected": True if int(reading[15].decode().replace('\r', '').replace('\n','')) == 1 else False,
+                        "Starting_System": True if int(reading[17].decode().replace('\r', '').replace('\n','')) == 1 else False,
+                        "System_Shut_Down": True if int(reading[19].decode().replace('\r', '').replace('\n','')) == 1 else False,
+                        "Charging": True if int(reading[21].decode().replace('\r', '').replace('\n','')) == 1 else False,
+                        "Fully_Charged": True if int(reading[23].decode().replace('\r', '').replace('\n','')) == 1 else False, 
+                        "Camera_On": True,
+                        "Antenna_On": True,
+                        "Internet_Available": True, 
+                        "LED_Status": 1
+                        }
+                print(data)
+                '''
+                requests.post("http://localhost:8080/update_status", json=data)
+                if data['System_Shut_Down']:
+                    print('OFF')
+                    os.system('shutdown now')
+                    print('Bye')
+                #print(response)
+                #print(data)
+                '''
+            except Exception as e:
+                print(e)
+
     while True:
         if status['race_status'] == 'racing':
             reading = serialport_RFID.readlines()
