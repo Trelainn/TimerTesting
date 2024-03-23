@@ -368,10 +368,6 @@ def participant():
                 video_permission = False if request.json['guest'] else True
             participant_id = uuid.uuid4()
             db, c = get_db()
-            c.execute('select * from race_competitors where race_number = %s and user_id = %s',(status['current_race_number'], user_id))
-            competitor_by_user = c.fetchone()
-            if competitor_by_user is not None:
-                return {'ok': False, 'status': 'failed', 'process': 'Participant', 'error': 'User is already registered in the race'}
             c.execute('select * from race_competitors where race_number = %s and tag = %s',(status['current_race_number'], tag))
             competitor_by_tag = c.fetchone()
             if competitor_by_tag is not None:
