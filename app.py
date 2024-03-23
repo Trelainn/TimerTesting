@@ -108,10 +108,10 @@ def get_race_info(race_number, user_id):
         else:
             race_info['total_time'] = 0
         race_info['participants'] = []
-        c.execute('select user_id from race_competitors where race_number = %s', (race_number, ))
+        c.execute('select user_id, participant_id from race_competitors where race_number = %s', (race_number, ))
         race_competitors = c.fetchall()
         for competitor in race_competitors:
-            race_info['participants'].append(get_competitor_info(race_number=race_number, user_id=competitor[0], requester = user_id))
+            race_info['participants'].append(get_competitor_info(race_number=race_number, user_id=competitor[0], requester = user_id, participant_id = competitor[1]))
         if race_info['category'] == 'Laps race' and race_info['status'] == 'started':
             c.execute('select count(lap) from race_competitors_laps where race_number = %s', (race_number, ))
             min_lap = c.fetchone()
@@ -121,9 +121,9 @@ def get_race_info(race_number, user_id):
         race_info['participants_amount'] = len(race_info['participants'])
     return race_info
 
-def get_competitor_info(race_number, user_id, requester):
+def get_competitor_info(race_number, user_id, requester, participant_id):
     db, c = get_db()
-    c.execute('select * from race_competitors where race_number = %s and user_id = %s', (race_number, user_id))
+    c.execute('select * from race_competitors where race_number = %s and participant_id = %s', (race_number, participant_id))
     competitor = c.fetchone()
     competitor_info = {}
     #competitor_info['race_number'] = race_number
