@@ -9,10 +9,16 @@ CREATE TABLE IF NOT EXISTS system_tracker (
     antenna_on BOOLEAN NOT NULL,
     pcb_connection BOOLEAN NOT NULL,
     internet_available BOOLEAN NOT NULL,
-    led_status VARCHAR(10)
+    led_status VARCHAR(10),
+    charger_connected BOOLEAN NOT NULL,
+    starting_system BOOLEAN NOT NULL,
+    system_shut_down BOOLEAN NOT NULL
 );
 
-INSERT INTO system_tracker (date, battery_percentage, temperature, race_status, race_number, camera_on, antenna_on, pcb_connection, internet_available, led_status) VALUES ('2024-01-01 00:00:00', 0, 0, 'no race', 0, FALSE, FALSE, FALSE, FALSE, 'INITIAL');
+INSERT INTO system_tracker (date, battery_percentage, temperature, race_status, 
+race_number, camera_on, antenna_on, pcb_connection, internet_available, led_status,
+charger_connected, starting_system, system_shut_down
+) VALUES ('2024-01-01 00:00:00', 0, 0, 'no race', 0, FALSE, FALSE, FALSE, FALSE, 'INITIAL', FALSE, FALSE, FALSE);
 
 CREATE TABLE IF NOT EXISTS system_parameters (
 	id VARCHAR(20) PRIMARY KEY,
@@ -20,13 +26,13 @@ CREATE TABLE IF NOT EXISTS system_parameters (
 );
 
 INSERT INTO system_parameters (id, value) VALUES ('race_status', 'no race');
-INSERT INTO system_parameters (id, value) VALUES ('race_owner', 'no race');
+INSERT INTO system_parameters (id, value) VALUES ('race_owner', 'no owner');
 INSERT INTO system_parameters (id, value) VALUES ('next_race_number', '1');
+INSERT INTO system_parameters (id, value) VALUES ('lap_threshold', '20');
 
 
 CREATE TABLE IF NOT EXISTS races (
 	race_number INTEGER NOT NULL PRIMARY KEY,
-    code VARCHAR(4),
     user_id VARCHAR(100),
     race_status VARCHAR(20),
     track VARCHAR(100),
@@ -40,14 +46,15 @@ CREATE TABLE IF NOT EXISTS race_competitors (
 	race_number INTEGER NOT NULL,
 	tag VARCHAR(10) NOT NULL,
 	nickname VARCHAR(100) NOT NULL,
-	user_id VARCHAR(28),
+	user_id VARCHAR(50),
 	toy VARCHAR(25),
     gender VARCHAR(25),
     weight_category VARCHAR(25),
-    photo BOOLEAN, 
+    photo BOOLEAN DEFAULT FALSE, 
     video_permission BOOLEAN DEFAULT FALSE,
+    participant_id VARCHAR(100),
 	FOREIGN KEY (race_number) REFERENCES races (race_number),
-	PRIMARY KEY (race_number, tag)
+	PRIMARY KEY (race_number, participant_id)
 );
 
 CREATE TABLE IF NOT EXISTS race_competitors_laps (
@@ -58,6 +65,7 @@ CREATE TABLE IF NOT EXISTS race_competitors_laps (
     video_name VARCHAR(20),
     info_uploaded BOOLEAN DEFAULT FALSE,
     video_uploaded BOOLEAN DEFAULT FALSE,
+    video_available BOOLEAN DEFAULT FALSE,
 	FOREIGN KEY (race_number) REFERENCES races (race_number),
 	PRIMARY KEY (race_number, tag, lap)
 );
