@@ -366,7 +366,9 @@ def participant():
             toy = request.json['toy']
             tag = request.json['tag']
             if 'guest' in request.json:    
-                video_permission = False if request.json['guest'] else True
+                video_permission = False if request.json['guest'] == True else True
+            else:
+                video_permission = False
             participant_id = uuid.uuid4()
             db, c = get_db()
             c.execute('select * from race_competitors where race_number = %s and tag = %s',(status['current_race_number'], tag))
