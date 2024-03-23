@@ -387,7 +387,8 @@ def participant():
                     'user': user_id,
                     'profilePictureURL': None,
                     'toy': toy,
-                    'toyTag': tag}}
+                    'toyTag': tag,
+                    'guest': not video_permission}}
             else:
                 return {'ok': False, 'status': 'failed', 'process': 'Participant', 'error': 'An error ocurred'}
         else:
