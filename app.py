@@ -372,7 +372,7 @@ def participant():
             competitor_by_tag = c.fetchone()
             if competitor_by_tag is not None:
                 return {'ok': False, 'status': 'failed', 'process': 'Participant', 'error': 'Tag is already used by another participant'}
-            if competitor_by_tag is None and competitor_by_user is None:
+            if competitor_by_tag is None:
                 c.execute(
 					'insert into race_competitors (race_number, tag, nickname, user_id, toy, gender, weight_category, video_permission, participant_id) values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', 
 					(status['current_race_number'], tag, nickname, user_id, toy, gender, weight_category, video_permission, str(participant_id))
