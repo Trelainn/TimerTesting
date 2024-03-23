@@ -130,7 +130,7 @@ def readRFID():
     while True:
         reading = serialport.readlines()
         if reading:
-            if status['race_status'] == 'racing':
+            if True: #status['race_status'] == 'racing':
                 reading = serialport.readlines()
                 if reading:
                     print(reading)
@@ -179,7 +179,7 @@ def setGPIO():
     GPIO.output(12, True)
 
 if __name__ == "__main__":
-    #Thread(target=readSerial, args=()).start()
+    Thread(target=readSerial, args=()).start()
     Thread(target=readRFID, args=()).start()
     Thread(target=closePastRaces, args=()).start()
     #Thread(target=writeLED, args=()).start()
