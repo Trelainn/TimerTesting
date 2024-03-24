@@ -124,36 +124,34 @@ def updateWifiList():
         time.sleep(15)
 
 def readRFID():
-    serialport = serial.Serial("/dev/ttyACM0", 9600, timeout=0.01)
+    serialport_RFID = serial.Serial("/dev/ttyACM0", 9600, timeout=0.01)
     #serialport_RFID = serial.Serial("/dev/ttyUSB0", 9600, timeout=0.01)
     #serialport = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0-port0", 9600, timeout=0.01)
     while True:
-        reading = serialport.readlines()
-        if reading:
-            if True: #status['race_status'] == 'racing':
-                reading = serialport.readlines()
-                if reading:
-                    print(reading)
-                    tag = reading[0].decode().replace('\r', '').replace('\n','')
-                    if tag == 'CONNECTED':
-                        status['antenna_on'] = True
-                    print(tag)
-                    tag_read = tag[2:]
-                    time_now = datetime.datetime.now()
-                    try:
-                        if tag in times:
-                            last_time = times[tag]
-                            time_recorded = int((time_now - last_time).microseconds/1000 + (time_now - last_time).seconds * 1000)
-                            if time_recorded > (lap_threshold * 1000):
-                                times[tag] = time_now
-                                Thread(target=saveLapTime, args=(tag_read, time_recorded, camera.buffer)).start()
-                        else:
+        reading = serialport_RFID.readlines()
+        if True: #status['race_status'] == 'racing':
+            reading = serialport.readlines()
+            if reading:
+                print(reading)
+                tag = reading[0].decode().replace('\r', '').replace('\n','')
+                status['antenna_on'] = True
+                print(tag)
+                tag_read = tag[2:]
+                time_now = datetime.datetime.now()
+                try:
+                    if tag in times:
+                        last_time = times[tag]
+                        time_recorded = int((time_now - last_time).microseconds/1000 + (time_now - last_time).seconds * 1000)
+                        if time_recorded > (lap_threshold * 1000):
                             times[tag] = time_now
-                    except Exception as e:
-                        print(e)
-                serialport.reset_input_buffer()
-            else:
-                time.sleep(1)
+                            Thread(target=saveLapTime, args=(tag_read, time_recorded, camera.buffer)).start()
+                    else:
+                        times[tag] = time_now
+                except Exception as e:
+                    print(e)
+            serialport.reset_input_buffer()
+        else:
+            time.sleep(1)
 
 def saveLapTime(tag, time_recorded, video):
     try:
