@@ -130,7 +130,7 @@ def readRFID():
     while True:
         reading = serialport_RFID.readlines()
         if True: #status['race_status'] == 'racing':
-            reading = serialport.readlines()
+            reading = serialport_RFID.readlines()
             if reading:
                 print(reading)
                 tag = reading[0].decode().replace('\r', '').replace('\n','')
