@@ -129,13 +129,13 @@ def readRFID():
     #serialport = serial.Serial("/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.1:1.0-port0", 9600, timeout=0.01)
     while True:
         reading = serialport_RFID.readlines()
-        if True: #status['race_status'] == 'racing':
+        if status['race_status'] == 'racing':
             reading = serialport_RFID.readlines()
             if reading:
-                print(reading)
+                #print(reading)
                 tag = reading[0].decode().replace('\r', '').replace('\n','')
                 status['antenna_on'] = True
-                print(tag)
+                #print(tag)
                 tag_read = tag[2:]
                 time_now = datetime.datetime.now()
                 try:
